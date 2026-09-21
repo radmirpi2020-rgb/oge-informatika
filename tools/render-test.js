@@ -1,4 +1,4 @@
-﻿/* tools/render-test.js — запускает сайт «как в браузере»: грузит скрипты и boot.js,
+/* tools/render-test.js — запускает сайт «как в браузере»: грузит скрипты и boot.js,
    затем рисует каждую страницу и проверяет, что в DOM появилась настоящая разметка.
    Ловит именно те ошибки, которые видны только при отрисовке (например, забытый window.ST).
    Запуск: node tools/render-test.js */
@@ -291,6 +291,9 @@ courseCheck("стрелка есть в каждом разделе", () => {
   const arrows = (out.match(/class="arrow"/g) || []).length;
   if (heads !== arrows) return "заголовков " + heads + ", стрелок " + arrows;
   if (out.indexOf('aria-expanded="true"') === -1) return "нет признака раскрытого раздела";
+  /* у свёрнутых разделов должна быть подпись «скрыто N уроков» — по одной на каждый */
+  const hidden = (out.match(/class="module-hidden"/g) || []).length;
+  if (hidden !== heads) return "подписей «скрыто» " + hidden + ", а разделов " + heads;
   return null;
 });
 

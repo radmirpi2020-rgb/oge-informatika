@@ -106,6 +106,7 @@
             '<button class="module-head" type="button" aria-expanded="' + (open ? "true" : "false") + '">' +
               '<span class="arrow" aria-hidden="true">▸</span>' +
               '<span class="module-title">' + App.util.esc(g.name) + "</span>" +
+              '<span class="module-hidden">скрыто ' + g.items.length + " " + App.util.plural(g.items.length, "урок", "урока", "уроков") + "</span>" +
               '<span class="module-meta">' + g.items.length + " " + App.util.plural(g.items.length, "элемент", "элемента", "элементов") +
                 " · " + done + " из " + (byMod.total || g.items.length) + " пройдено</span>" +
             "</button>" +
