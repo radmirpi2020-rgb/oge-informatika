@@ -14,6 +14,20 @@ desktop.ini
 # config/deepseek-key.js — шаблон, он коммитится и ключа содержать не должен.
 config/deepseek-key.local.js
 
+# сервер (Payload + PostgreSQL): в публичный репозиторий не идут ни секреты,
+# ни зависимости, ни локальная база. Подробности — server/.gitignore.
+server/.env
+server/.env.*
+!server/.env.example
+server/node_modules/
+server/.next/
+server/.pglogs/
+server/.pgdata/
+server/test-results/
+
+# результат выгрузки сайта для хостинга
+deploy/
+
 # исследование: скачанные архивы ФИПИ, распакованные документы и выгрузки.
 # Тяжёлые файлы в репозиторий не идут, скрипт разбора PDF остаётся.
 _research/*
