@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f6f5f1">
+<title>ОГЭ Информатика</title>
+<style>
+  :root{--bg:#f6f5f1;--fg:#111;--muted:#6b6b6b;--line:#111;--accent:#ff4d00;--card:#fff;--ok:#16a34a;--err:#dc2626;--nav-h:0px}
+  [data-theme="dark"]{--bg:#0d0d0d;--fg:#ececec;--muted:#8a8a8a;--line:#2e2e2e;--accent:#ff6a2b;--card:#141414}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;transition:background .25s,color .25s;overflow-x:hidden}
+  .wrap{max-width:1140px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line);min-height:100vh;display:flex;flex-direction:column;padding-bottom:var(--nav-h)}
+  header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:20}
+  .logo{font-weight:700;letter-spacing:-.02em;font-size:16px}
+  .logo span{color:var(--accent)}
+  .toggle{border:1px solid var(--line);background:transparent;color:var(--fg);padding:8px 14px;font:inherit;font-size:13px;cursor:pointer;min-height:40px;border-radius:0}
+  .toggle:active{background:var(--fg);color:var(--bg)}
+  .layout{display:grid;grid-template-columns:220px 1fr;flex:1;min-height:0}
+  aside{border-right:1px solid var(--line);padding:20px 0}
+  aside nav{display:flex;flex-direction:column}
+  aside nav button{display:block;width:100%;text-align:left;background:none;border:none;color:var(--muted);padding:12px 24px;font:inherit;font-size:14px;border-left:2px solid transparent;cursor:pointer;transition:.15s}
+  aside nav button:hover{color:var(--fg)}
+  aside nav button.active{color:var(--fg);border-left-color:var(--accent);background:var(--card);font-weight:600}
+  main{padding:32px 28px;min-width:0}
+  h1{font-size:clamp(24px,6vw,38px);line-height:1.1;letter-spacing:-.03em;margin-bottom:14px}
+  h1 em{font-style:normal;color:var(--accent)}
+  h2{font-size:clamp(20px,5vw,22px);letter-spacing:-.02em;margin-bottom:10px}
+  h3{font-size:16px;margin:20px 0 10px}
+  .kicker{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:12px}
+  .lead{font-size:15px;color:var(--muted);max-width:660px;margin-bottom:20px}
+  p{margin-bottom:12px;font-size:15px}
+  .cta,.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--fg);color:var(--bg);padding:12px 20px;text-decoration:none;font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;min-height:44px}
+  .cta:active,.btn:active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.ghost{background:transparent;color:var(--fg)}
+  .btn.sm{padding:8px 14px;font-size:13px;min-height:38px}
+  .btn.danger{border-color:var(--err);color:var(--err);background:transparent}
+  .card{border:1px solid var(--line);background:var(--card);padding:18px 20px;margin-bottom:14px}
+  .q{border:1px solid var(--line);padding:18px 20px;margin-bottom:12px;background:var(--card)}
+  .q p.qt{font-weight:600;margin-bottom:14px;font-size:15px}
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;gap:10px;align-items:center;border:1px solid var(--line);padding:12px 14px;font-size:15px;cursor:pointer;transition:.12s;min-height:48px}
+  .opt:active{background:var(--bg)}
+  .opt input{accent-color:var(--accent);width:20px;height:20px;flex-shrink:0}
+  .opt.correct{border-color:var(--ok);background:rgba(22,163,74,.08)}
+  .opt.wrong{border-color:var(--err);background:rgba(220,38,38,.08)}
+  .result{display:none;border:1px solid var(--line);border-left:4px solid var(--accent);padding:16px 18px;margin-top:18px;background:var(--card);font-size:15px}
+  .result.show{display:block}
+  .hack{border-left:3px solid var(--accent);padding:10px 14px;margin:14px 0;background:var(--card);font-size:14px}
+  .hack b{color:var(--accent)}
+  .warn{border-left:3px solid var(--err);padding:10px 14px;margin:14px 0;background:var(--card);font-size:14px}
+  .warn b{color:var(--err)}
+  .ex{border:1px dashed var(--line);padding:12px 14px;font-family:ui-monospace,monospace;font-size:13px;margin:12px 0;white-space:pre-wrap;line-height:1.6;background:var(--bg);overflow-x:auto;-webkit-overflow-scrolling:touch}
+  code{font-family:ui-monospace,monospace;background:var(--bg);border:1px solid var(--line);padding:1px 6px;font-size:13px;word-break:break-word}
+  .lesson-card{border:1px solid var(--line);background:var(--card);padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:.15s;position:relative;display:flex;align-items:center;gap:14px;min-height:72px}
+  .lesson-card:active{border-color:var(--accent);background:var(--bg)}
+  .lesson-card .num{font-family:ui-monospace,monospace;font-size:20px;color:var(--muted);min-width:36px;font-weight:700}
+  .lesson-card .meta{flex:1;min-width:0}
+  .lesson-card h3{margin:0 0 4px;font-size:15px}
+  .lesson-card .sub{color:var(--muted);font-size:13px;margin:0}
+  .lesson-card .status{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:3px 8px;white-space:nowrap;flex-shrink:0}
+  .lesson-card .status.done{color:var(--ok);border-color:var(--ok)}
+  .lesson-card .status.partial{color:var(--accent);border-color:var(--accent)}
+  .lesson-card.practice{border-left:4px solid var(--accent)}
+  .lesson-card .practical-tag{font-size:10px;background:var(--accent);color:#fff;padding:2px 6px;margin-left:6px;letter-spacing:.08em}
+  .task{border:1px solid var(--line);background:var(--card);padding:16px 18px;margin-bottom:12px}
+  .task .label{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:8px}
+  .task .qt{font-weight:600;margin-bottom:12px;font-size:15px}
+  .task input[type="text"]{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:12px 14px;font:inherit;font-size:16px;margin-bottom:10px;font-family:ui-monospace,monospace;min-height:48px}
+  .task input[type="text"]:focus{outline:none;border-color:var(--accent)}
+  .task .feedback{margin-top:10px;font-size:14px;display:none;font-weight:600}
+  .task .feedback.show{display:block}
+  .task .feedback.ok{color:var(--ok)}
+  .task .feedback.err{color:var(--err)}
+  .task .explain{margin-top:10px;padding:10px 14px;background:var(--bg);border-left:3px solid var(--accent);font-size:14px;display:none}
+  .task .explain.show{display:block}
+  .practical{border:2px solid var(--accent);background:var(--card);padding:20px 22px;margin:24px 0 8px}
+  .practical-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .practical-badge{background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;letter-spacing:.12em;text-transform:uppercase}
+  .practical-head h3{margin:0;font-size:17px}
+  .practical-intro{font-size:14px;color:var(--muted);margin-bottom:14px}
+  .practical-task{border:1px solid var(--line);background:var(--bg);padding:14px 16px;margin-bottom:14px;font-size:15px}
+  .practical-task b{display:block;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+  .practical details{border:1px solid var(--line);background:var(--bg);margin-bottom:8px}
+  .practical details summary{list-style:none;cursor:pointer;padding:12px 16px;font-size:14px;font-weight:600;user-select:none}
+  .practical details summary::-webkit-details-marker{display:none}
+  .practical details summary::before{content:"▸ ";color:var(--accent)}
+  .practical details[open] summary::before{content:"▾ "}
+  .practical details .inner{padding:0 16px 14px;font-size:14px}
+  .practical details .inner ol{padding-left:22px}
+  .practical details .inner li{margin-bottom:6px}
+  .progress-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;gap:12px}
+  .progress-row:last-child{border-bottom:none}
+  .progress-row>span:first-child{min-width:0;word-break:break-word}
+  .progress-row .val{font-family:ui-monospace,monospace;font-weight:600;white-space:nowrap}
+  .big-stat{font-size:42px;font-weight:700;letter-spacing:-.03em;font-family:ui-monospace,monospace;line-height:1}
+  .big-stat span{font-size:20px;color:var(--muted)}
+  footer{padding:22px 20px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--muted);font:inherit;font-size:14px;margin-bottom:18px;cursor:pointer;padding:8px 0;min-height:40px}
+  .back:active{color:var(--accent)}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .row .btn,.row .cta{flex:1 1 auto}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .field input[type="text"],.field input[type="password"],.field input[type="number"],.field textarea,.field select{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:12px 14px;font:inherit;font-size:16px;min-height:48px;border-radius:0}
+  .field textarea{font-size:15px;line-height:1.55;min-height:220px;resize:vertical;font-family:ui-monospace,monospace}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent)}
+  .field .hint{font-size:12px;color:var(--muted);margin-top:6px}
+  .md-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:6px;border:1px solid var(--line);border-bottom:none;background:var(--card);position:sticky;top:57px;z-index:5}
+  .md-toolbar+textarea{border-top:none}
+  .md-btn{border:1px solid var(--line);background:transparent;color:var(--fg);padding:0 10px;font:inherit;font-size:13px;cursor:pointer;min-height:36px;min-width:36px;border-radius:0;display:inline-flex;align-items:center;justify-content:center;gap:4px;user-select:none}
+  .md-btn:active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .md-btn b{font-weight:800;font-size:15px}
+  .md-btn i{font-style:italic;font-size:15px;font-weight:600}
+  .md-btn .mono{font-family:ui-monospace,monospace;font-weight:700;font-size:13px}
+  .md-sep{width:1px;background:var(--line);margin:4px 4px;align-self:stretch}
+  .theory-preview-wrap{margin-top:12px;border:1px solid var(--line);background:var(--card)}
+  .theory-preview-wrap>summary{list-style:none;cursor:pointer;padding:10px 14px;font-size:13px;font-weight:600;color:var(--muted);user-select:none}
+  .theory-preview-wrap>summary::-webkit-details-marker{display:none}
+  .theory-preview-wrap>summary::before{content:"▸ ";display:inline-block}
+  .theory-preview-wrap[open]>summary::before{content:"▾ "}
+  .theory-preview{padding:16px 18px;border-top:1px solid var(--line);font-size:15px}
+  .admin-lesson-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);background:var(--card);margin-bottom:8px}
+  .admin-lesson-row.practice{border-left:4px solid var(--accent)}
+  .admin-lesson-row .num{font-family:ui-monospace,monospace;font-weight:700;color:var(--muted);min-width:30px;font-size:15px}
+  .admin-lesson-row .info{flex:1;min-width:0}
+  .admin-lesson-row .info h4{font-size:14px;margin:0 0 2px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .admin-lesson-row .info .sub{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .admin-lesson-row .tools{display:flex;gap:4px;flex-shrink:0}
+  .tool-btn{width:36px;height:36px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer;font-size:15px;border-radius:0;display:inline-flex;align-items:center;justify-content:center;padding:0}
+  .tool-btn:active{background:var(--fg);color:var(--bg)}
+  .tool-btn.danger{color:var(--err);border-color:var(--err)}
+  .tool-btn:disabled{opacity:.3;cursor:default}
+  .task-editor{border:1px solid var(--line);background:var(--card);padding:16px 18px;margin-bottom:12px}
+  .task-editor-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .task-editor-head b{font-size:15px}
+  .task-editor-tools{display:flex;gap:4px}
+  .opt-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .opt-row .opt-radio{width:22px;height:22px;flex-shrink:0;accent-color:var(--accent);cursor:pointer}
+  .opt-row .opt-text{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:10px 12px;font:inherit;font-size:15px;min-height:44px}
+  .opt-row .opt-remove{flex-shrink:0;width:40px;height:44px;border:1px solid var(--err);background:transparent;color:var(--err);cursor:pointer;font-size:18px;border-radius:0;padding:0}
+  .opt-row.correct .opt-text{border-color:var(--ok)}
+  .editor-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+  .editor-actions .btn{flex:1 1 auto}
+  .alert{padding:12px 16px;border-left:3px solid var(--accent);background:var(--card);margin-bottom:14px;font-size:14px}
+  .alert.ok{border-left-color:var(--ok);color:var(--ok)}
+  .alert.err{border-left-color:var(--err);color:var(--err)}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px}
+  .stat-box{border:1px solid var(--line);background:var(--card);padding:14px}
+  .stat-box .n{font-family:ui-monospace,monospace;font-size:24px;font-weight:700;line-height:1;margin-bottom:6px}
+  .stat-box .l{font-size:12px;color:var(--muted)}
+  #error{display:none;padding:16px;border:2px solid var(--err);background:rgba(220,38,38,.1);color:var(--err);font-family:ui-monospace,monospace;font-size:12px;margin-bottom:20px;white-space:pre-wrap;word-break:break-word}
+  #error.show{display:block}
+  @media (max-width:900px){
+    :root{--nav-h:68px}
+    .wrap{border-left:none;border-right:none}
+    aside{position:fixed;bottom:0;left:0;right:0;border-right:none;border-top:1px solid var(--line);padding:0;background:var(--bg);z-index:30;padding-bottom:env(safe-area-inset-bottom,0)}
+    aside nav{flex-direction:row;justify-content:space-around;overflow-x:auto;padding:0;scrollbar-width:none}
+    aside nav::-webkit-scrollbar{display:none}
+    aside nav button{flex:1 1 0;min-width:60px;text-align:center;padding:10px 6px 8px;font-size:11px;line-height:1.2;border-left:none;border-top:2px solid transparent;min-height:60px;display:flex;align-items:center;justify-content:center}
+    aside nav button.active{border-left:none;border-top-color:var(--accent);background:transparent;color:var(--fg)}
+    .layout{grid-template-columns:1fr}
+    main{padding:22px 16px 28px}
+    header{padding:12px 16px}
+    .logo{font-size:15px}
+    .toggle{padding:6px 12px;font-size:12px;min-height:38px}
+    h1{font-size:26px}
+    h2{font-size:20px}
+    .lesson-card{padding:14px 16px;gap:12px}
+    .lesson-card .num{font-size:18px;min-width:30px}
+    .lesson-card h3{font-size:14px}
+    .lesson-card .sub{font-size:12px}
+    .stat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+    .stat-box{padding:12px}
+    .stat-box .n{font-size:20px}
+    .row .btn,.row .cta{flex:1 1 100%}
+    footer{padding:18px 16px;font-size:11px}
+    .q,.task,.card{padding:16px}
+    .big-stat{font-size:36px}
+    .opt{padding:13px 14px;font-size:15px}
+    .admin-lesson-row{flex-wrap:wrap}
+    .admin-lesson-row .tools{width:100%;justify-content:flex-end;margin-top:6px}
+    .field textarea{min-height:180px}
+    .md-toolbar{top:57px}
+    .md-btn{padding:0 8px;min-height:34px;min-width:34px;font-size:12px}
+    .practical{padding:16px 16px}
+  }
+  @media (max-width:380px){
+    .lesson-card{flex-wrap:wrap}
+    .lesson-card .status{position:absolute;top:12px;right:12px}
+    .lesson-card .meta{padding-right:60px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">ОГЭ<span>·</span>Информатика</div>
+    <button class="toggle" id="themeBtn">Тёмная</button>
+  </header>
+  <div class="layout">
+    <aside><nav id="nav">
+      <button data-nav="home">Главная</button>
+      <button data-nav="test">Тест</button>
+      <button data-nav="lessons">Уроки</button>
+      <button data-nav="progress">Прогресс</button>
+      <button data-nav="admin">Админ</button>
+    </nav></aside>
+    <main><div id="error"></div><div id="app"></div></main>
+  </div>
+  <footer><div>ОГЭ·Информатика</div><div>Локально · Без сервера</div></footer>
+</div>
+
+<script>
+"use strict";
+
+function mdEscape(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function mdInline(text){var s=mdEscape(text);s=s.replace(/`([^`]+)`/g,"<code>$1</code>");s=s.replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>");s=s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g,"$1<i>$2</i>");return s;}
+function theoryToHtml(text){
+  if(!text)return "";
+  if(/^\s*<(p|div|b|i|code|br|span)[\s>]/i.test(text))return text;
+  var lines=String(text).split("\n"),out=[],i=0;
+  while(i<lines.length){
+    var line=lines[i];
+    if(line.trim()==="~~~"){var buf=[];i++;while(i<lines.length&&lines[i].trim()!=="~~~"){buf.push(lines[i]);i++;}i++;out.push('<div class="ex">'+mdEscape(buf.join("\n"))+"</div>");continue;}
+    if(line.indexOf("> ")===0){var hb=[];while(i<lines.length&&lines[i].indexOf("> ")===0){hb.push(lines[i].slice(2));i++;}out.push('<div class="hack">'+mdInline(hb.join(" "))+"</div>");continue;}
+    if(line.indexOf("!! ")===0){var wb=[];while(i<lines.length&&lines[i].indexOf("!! ")===0){wb.push(lines[i].slice(3));i++;}out.push('<div class="warn">'+mdInline(wb.join(" "))+"</div>");continue;}
+    if(line.trim()===""){i++;continue;}
+    var para=[];while(i<lines.length&&lines[i].trim()!==""&&lines[i].indexOf("> ")!==0&&lines[i].indexOf("!! ")!==0&&lines[i].trim()!=="~~~"){para.push(lines[i]);i++;}
+    out.push("<p>"+para.map(mdInline).join("<br>")+"</p>");
+  }
+  return out.join("");
+}
+
+/* ============ 25 УРОКОВ + 10 ПРАКТИК = 35 ЭЛЕМЕНТОВ ============ */
+
+var LESSONS_DEFAULT = [
+  {id:1,title:"Введение в системы счисления",sub:"Позиции, основания, цифры",
+    theory:["**Система счисления** — способ записи чисел. В позиционной системе каждая цифра имеет вес, зависящий от её позиции.","","**Двоичная** (основание 2): цифры 0, 1.","**Восьмеричная** (8): цифры 0–7.","**Шестнадцатеричная** (16): цифры 0–9 и A–F (A=10, B=11, C=12, D=13, E=14, F=15).","**Десятичная** (10): цифры 0–9.","","~~~","Число 234 в десятичной:","2 в позиции 2 (сотни) = 2*100 = 200","3 в позиции 1 (десятки) = 3*10 = 30","4 в позиции 0 (единицы) = 4*1 = 4","~~~","","> **Лайфхак.** Позиция 0 — крайняя правая цифра. Считаем справа налево.","","!! **Ошибка.** Считать позиции слева направо — это даст неверный результат."].join("\n"),
+    tasks:[
+      {id:"l1t1",type:"input",q:"Сколько цифр в двоичной системе?",answer:"2",explain:"0 и 1."},
+      {id:"l1t2",type:"input",q:"Чему равно A в шестнадцатеричной?",answer:"10",explain:"A=10."},
+      {id:"l1t3",type:"input",q:"Чему равно F?",answer:"15",explain:"F=15."},
+      {id:"l1t4",type:"input",q:"Позиция крайней правой цифры?",answer:"0",explain:"Позиция 0."},
+      {id:"l1t5",type:"input",q:"2 в 5-й степени?",answer:"32",explain:"32."}
+    ]
+  },
+  {id:2,title:"Перевод в десятичную систему",sub:"Умножаем цифру на вес позиции",
+    theory:["**Правило.** Каждую цифру умножаем на основание в степени её позиции, складываем.","","~~~","1011 (двоичн) = 1*8 + 0*4 + 1*2 + 1*1 = 11","2F (шестнадц) = 2*16 + 15*1 = 47","34 (восьмер) = 3*8 + 4*1 = 28","~~~","","> **Лайфхак.** Степени двойки: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024.","","!! **Ошибка.** Забыть, что F=15, а не 16."].join("\n"),
+    tasks:[
+      {id:"l2t1",type:"input",q:"1101 (двоичн) в десятичную.",answer:"13",explain:"8+4+0+1=13."},
+      {id:"l2t2",type:"input",q:"10110 (двоичн) в десятичную.",answer:"22",explain:"16+4+2=22."},
+      {id:"l2t3",type:"input",q:"17 (восьмер) в десятичную.",answer:"15",explain:"1*8+7=15."},
+      {id:"l2t4",type:"input",q:"2A (шестнадц) в десятичную.",answer:"42",explain:"2*16+10=42."},
+      {id:"l2t5",type:"input",q:"11111111 (двоичн) в десятичную.",answer:"255",explain:"2^8-1=255."}
+    ]
+  },
+  {id:3,title:"Перевод из десятичной и между 2-8-16",sub:"Деление и группировка бит",
+    theory:["**Из десятичной.** Делим на основание, остатки выписываем снизу вверх.","","**Между 2, 8, 16.** 8=2^3, 16=2^4. Группируем биты по 3 или 4 справа.","","~~~","25 в двоичную: 25/2=12(1), 12/2=6(0), 6/2=3(0), 3/2=1(1), 1/2=0(1) -> 11001","101101 -> 101|101 = 55 (восьмер)","101101 -> 0010|1101 = 2D (шестнадц)","~~~","","> **Лайфхак.** Из двоичной в 8 или 16 не переводи через десятичную — группируй сразу.","","!! **Ошибка.** Дополнять неполную группу нулями справа. Надо слева."].join("\n"),
+    tasks:[
+      {id:"l3t1",type:"input",q:"25 в двоичную.",answer:"11001",explain:"Остатки снизу вверх."},
+      {id:"l3t2",type:"input",q:"100 в двоичную.",answer:"1100100",explain:"64+32+4."},
+      {id:"l3t3",type:"input",q:"255 в шестнадцатеричную.",answer:"FF",explain:"15*16+15."},
+      {id:"l3t4",type:"input",q:"101101 в восьмеричную.",answer:"55",explain:"101|101=5|5."},
+      {id:"l3t5",type:"input",q:"101101 в шестнадцатеричную.",answer:"2D",explain:"0010|1101=2|D."}
+    ]
+  },
+  {id:4,title:"Практика: системы счисления",sub:"Объединение уроков 1-3",practice:true,
+    theory:["Большая задача по всем системам счисления. Вспомни перевод в десятичную, из десятичной и группировку бит."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: системы счисления",
+      intro:"Задача объединяет все три урока по системам счисления.",
+      task:"Дано три числа: A = 11011 (двоичная), B = 47 (восьмеричная), C = 1F (шестнадцатеричная). 1) Переведи A, B, C в десятичную. 2) Найди сумму A+B+C в десятичной. 3) Переведи сумму в двоичную, восьмеричную и шестнадцатеричную. 4) Сколько единиц в двоичной записи суммы?",
+      steps:["A = 11011 = 16+8+2+1 = 27. B = 47 (восьмер) = 4*8+7 = 39. C = 1F (шестнадц) = 16+15 = 31.","Сумма: 27+39+31 = 97.","97 в двоичную: 64+32+1 = 1100001.","97 в восьмеричную: 97/8=12(1), 12/8=1(4), 1/8=0(1) → 141.","97 в шестнадцатеричную: 97/16=6(1) → 61.","Единиц в 1100001: 3."],
+      answer:"A=27, B=39, C=31. Сумма 97. В двоичной 1100001. В восьмеричной 141. В шестнадцатеричной 61. Единиц 3."
+    }
+  },
+  {id:5,title:"Логические операции",sub:"И, ИЛИ, НЕ, импликация",
+    theory:["**НЕ** (¬A) — инверсия.","**И** (A ∧ B) — истинно только при обоих истинных.","**ИЛИ** (A ∨ B) — ложно только при обоих ложных.","**Импликация** (A → B) — ложна только при A=1, B=0.","","**Порядок:** НЕ, И, ИЛИ. Скобки первыми.","","~~~","A=1, B=0: A И B = 0, A ИЛИ B = 1, A → B = 0.","~~~","","> **Лайфхак.** И — умножение, ИЛИ — сложение (но 1+1=1).","","!! **Ошибка.** ИЛИ в логике включающее, а не исключающее."].join("\n"),
+    tasks:[
+      {id:"l5t1",type:"input",q:"A=1,B=0. A И B? (0/1)",answer:"0",explain:"И только при обоих 1."},
+      {id:"l5t2",type:"input",q:"A=1,B=0. A ИЛИ B?",answer:"1",explain:"ИЛИ при любом 1."},
+      {id:"l5t3",type:"input",q:"A=1,B=1. НЕ A? (0/1)",answer:"0",explain:"НЕ 1 = 0."},
+      {id:"l5t4",type:"input",q:"A=1,B=1. A → B?",answer:"1",explain:"Ложна только 1→0."},
+      {id:"l5t5",type:"choice",q:"Порядок без скобок?",options:["И, НЕ, ИЛИ","НЕ, И, ИЛИ","ИЛИ, И, НЕ","НЕ, ИЛИ, И"],answer:1,explain:"НЕ, И, ИЛИ."}
+    ]
+  },
+  {id:6,title:"Таблицы истинности и де Морган",sub:"Упрощения и законы",
+    theory:["**Таблица истинности:** для n переменных 2^n строк.","","**Законы де Моргана:**","~~~","НЕ(A И B) = НЕ A ИЛИ НЕ B","НЕ(A ИЛИ B) = НЕ A И НЕ B","~~~","","**Упрощения:**","~~~","A И A = A","A И НЕ A = 0","A ИЛИ НЕ A = 1","~~~","","> **Лайфхак.** Переменных больше 3 — не рисуй таблицу, подставь значения.","","!! **Ошибка.** НЕ(A И B) ≠ НЕ A И НЕ B."].join("\n"),
+    tasks:[
+      {id:"l6t1",type:"input",q:"Сколько строк для 3 переменных?",answer:"8",explain:"2^3=8."},
+      {id:"l6t2",type:"input",q:"Сколько строк для 4 переменных?",answer:"16",explain:"16."},
+      {id:"l6t3",type:"choice",q:"НЕ(A ИЛИ B)?",options:["НЕ A ИЛИ НЕ B","НЕ A И НЕ B","A И B","A ИЛИ B"],answer:1,explain:"Де Морган."},
+      {id:"l6t4",type:"input",q:"A И НЕ A? (0/1/A)",answer:"0",explain:"Противоречие."},
+      {id:"l6t5",type:"input",q:"A ИЛИ НЕ A? (0/1/A)",answer:"1",explain:"Всегда истинно."}
+    ]
+  },
+  {id:7,title:"Практика: логика",sub:"Объединение уроков 5-6",practice:true,
+    theory:["Практика по логическим операциям и законам де Моргана."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: логика",
+      intro:"Задача на логические выражения.",
+      task:"Дано выражение: (A И B) ИЛИ (НЕ A И НЕ B). 1) Составь таблицу истинности. 2) Что это за операция? 3) Упрости НЕ(A ИЛИ B) по де Моргану. 4) Вычисли выражение при A=1, B=0.",
+      steps:["Таблица: 00→1, 01→0, 10→0, 11→1.","Это эквивалентность (A ↔ B).","НЕ(A ИЛИ B) = НЕ A И НЕ B.","При A=1, B=0: (1 И 0) ИЛИ (0 И 1) = 0 ИЛИ 0 = 0."],
+      answer:"1) 00→1, 01→0, 10→0, 11→1. 2) Эквивалентность. 3) НЕ A И НЕ B. 4) 0."
+    }
+  },
+  {id:8,title:"Алгоритмы и исполнители",sub:"Чертёжник, Кузнечик, Черепашка",
+    theory:["**Алгоритм** — последовательность команд для исполнителя.","","**Чертёжник:** «сместиться на (a,b)» — x=x+a, y=y+b.","**Кузнечик:** «вперёд n» — x=x+n, «назад n» — x=x-n.","**Черепашка:** движение с поворотами.","","~~~","Кузнечик в 0. Повтори 3 раза [вперёд 2, назад 1]","Шаг 1: 0→2→1","Шаг 2: 1→3→2","Шаг 3: 2→4→3","~~~","","> **Лайфхак.** Цикл больше 5 раз — найди смещение за цикл и умножь.","","!! **Ошибка.** «Вперёд 2» — прибавить 2, а не перейти в точку 2."].join("\n"),
+    tasks:[
+      {id:"l8t1",type:"input",q:"Кузнечик в 0. Повтори 4 раза [вперёд 3, назад 1]. Где?",answer:"8",explain:"+2*4=8."},
+      {id:"l8t2",type:"input",q:"Кузнечик в 5. Повтори 3 раза [назад 2, вперёд 1]. Где?",answer:"2",explain:"-1*3=-3. 5-3=2."},
+      {id:"l8t3",type:"input",q:"Чертёжник (0,0). (2,3), (-1,2). X?",answer:"1",explain:"0+2-1=1."},
+      {id:"l8t4",type:"input",q:"Перо опущено, 4 отрезка. Линий?",answer:"4",explain:"4."},
+      {id:"l8t5",type:"input",q:"Перо поднято, 5 отрезков. Линий?",answer:"0",explain:"0."}
+    ]
+  },
+  {id:9,title:"Циклы и условия",sub:"Повтори, пока, если",
+    theory:["**Цикл «повтори N раз»** — выполнить блок N раз.","**Цикл «пока условие»** — выполнять, пока истинно.","**Условие «если»** — выполнить блок при истине.","**Условие «если-иначе»** — выбор ветви.","","~~~","Пока x < 5: x = x + 2","x=0 → 2 → 4 → 6. Цикл завершён.","~~~","","> **Лайфхак.** Маленький цикл — по шагам. Большой — ищи закономерность.","","!! **Ошибка.** Забыть про последнюю итерацию."].join("\n"),
+    tasks:[
+      {id:"l9t1",type:"input",q:"x=0. Пока x<6: x=x+2. Итог?",answer:"6",explain:"0,2,4,6."},
+      {id:"l9t2",type:"input",q:"x=1. Пока x<10: x=x*2. Итог?",answer:"16",explain:"1,2,4,8,16."},
+      {id:"l9t3",type:"input",q:"x=0. Повтори 5 раз: x=x+3. Итог?",answer:"15",explain:"15."},
+      {id:"l9t4",type:"input",q:"x=10. Пока x>0: x=x-3. Итог?",answer:"-2",explain:"10,7,4,1,-2."},
+      {id:"l9t5",type:"input",q:"Кузнечик в 0. Повтори 6 раз [+4,-2]. Где?",answer:"12",explain:"+2*6=12."}
+    ]
+  },
+  {id:10,title:"Вспомогательные алгоритмы",sub:"Процедуры и функции",
+    theory:["**Вспомогательный алгоритм** — отдельная процедура с именем.","","Позволяет не дублировать код и упрощает большие программы.","","~~~","Процедура Квадрат:","  повтори 4 раза [вперёд 10, направо 90]","","Вызов: Квадрат, сместиться, Квадрат.","~~~","","> **Лайфхак.** Повторяющийся блок команд — обычно это процедура.","","!! **Ошибка.** Считать, что процедура выполняется один раз."].join("\n"),
+    tasks:[
+      {id:"l10t1",type:"input",q:"Квадрат (10 шагов). Вызвали 3 раза. Всего шагов?",answer:"120",explain:"3*4*10=120."},
+      {id:"l10t2",type:"input",q:"Процедура: 4 раза [вперёд 5, направо 90]. Периметр?",answer:"20",explain:"4*5=20."},
+      {id:"l10t3",type:"input",q:"Процедура: 3 раза [вперёд 8, направо 120]. Периметр?",answer:"24",explain:"24."},
+      {id:"l10t4",type:"input",q:"Два Квадрата со стороной 6. Общий периметр?",answer:"48",explain:"2*24."},
+      {id:"l10t5",type:"input",q:"Процедура: +5. Вызвали 4 раза из 10.",answer:"30",explain:"10+4*5=30."}
+    ]
+  },
+  {id:11,title:"Практика: алгоритмы",sub:"Объединение уроков 8-10",practice:true,
+    theory:["Практика по алгоритмам, циклам и процедурам."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: алгоритмы",
+      intro:"Задача на циклы, условия и процедуры.",
+      task:"У Кузнечика есть процедура Прыжок: повтори 2 раза [вперёд 3, назад 1]. Кузнечик в точке 5. Программа: Прыжок три раза. 1) Смещение за один Прыжок? 2) Куда попадёт? 3) Сколько итераций внешнего и внутреннего цикла? 4) Если добавить ещё один Прыжок, где окажется?",
+      steps:["Прыжок = 2 раза [+2] = +4.","3 Прыжка = +12. Начало 5, итог 17.","Внешних 3, внутренних 2. Всего 6 команд.","После 4-го Прыжка: 17+4=21."],
+      answer:"Смещение за Прыжок +4. Итог 17. Внешних 3, внутренних 2. После 4-го Прыжка 21."
+    }
+  },
+  {id:12,title:"Кодирование текста",sub:"ASCII, Unicode, биты",
+    theory:["**ASCII** — 8 бит = 1 байт на символ.","**UTF-16** — 16 бит = 2 байта.","**UTF-8** — переменная длина (латиница 1, кириллица 2).","","**Формула:** размер = число символов × бит на символ.","","1 Кбайт = 1024 байта. 1 Мбайт = 1024 Кбайта.","","~~~","«Мама мыла раму» = 14 символов.","ASCII: 14*8 = 112 бит = 14 байт.","~~~","","> **Лайфхак.** Символ ASCII = 1 байт, размер в байтах = числу символов.","","!! **Ошибка.** Не считать пробелы и знаки."].join("\n"),
+    tasks:[
+      {id:"l12t1",type:"input",q:"Сколько бит в ASCII?",answer:"8",explain:"8."},
+      {id:"l12t2",type:"input",q:"Сколько бит в UTF-16?",answer:"16",explain:"16."},
+      {id:"l12t3",type:"input",q:"20 символов ASCII. Байт?",answer:"20",explain:"20."},
+      {id:"l12t4",type:"input",q:"32 символа Unicode. Байт?",answer:"64",explain:"32*2=64."},
+      {id:"l12t5",type:"input",q:"1 Кбайт — сколько байт?",answer:"1024",explain:"1024."}
+    ]
+  },
+  {id:13,title:"Кодирование изображений",sub:"Пиксели, глубина цвета",
+    theory:["Изображение состоит из пикселей. Глубина — бит на пиксель.","","**Формула:** размер = ширина × высота × глубина.","","Число цветов = 2^глубина. 8 бит = 256, 24 бита = 16,7 млн.","","~~~","100x100, 8 бит:","100*100*8 = 80 000 бит = 10 000 байт.","~~~","","> **Лайфхак.** 8-битное изображение: байт = числу пикселей.","","!! **Ошибка.** Путать глубину (бит) и число цветов."].join("\n"),
+    tasks:[
+      {id:"l13t1",type:"input",q:"100x100, 8 бит. Байт?",answer:"10000",explain:"10000."},
+      {id:"l13t2",type:"input",q:"10x10, 24 бита. Байт?",answer:"300",explain:"300."},
+      {id:"l13t3",type:"input",q:"8 бит. Цветов?",answer:"256",explain:"256."},
+      {id:"l13t4",type:"input",q:"16 бит. Цветов?",answer:"65536",explain:"65536."},
+      {id:"l13t5",type:"input",q:"64 цвета. Бит на пиксель?",answer:"6",explain:"2^6=64."}
+    ]
+  },
+  {id:14,title:"Практика: кодирование текста и изображений",sub:"Объединение уроков 12-13",practice:true,
+    theory:["Практика по кодированию текста и изображений."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: текст и изображения",
+      intro:"Задача на подсчёт объёмов.",
+      task:"Ученик готовит проект: 1) Текст 3000 символов в Unicode. 2) Изображение 400x300 пикселей, 8 бит. 3) Изображение 200x200 пикселей, 24 бита. Вопросы: 1) Кбайт в тексте? 2) Кбайт в первом изображении? 3) Кбайт во втором изображении? 4) Что больше?",
+      steps:["Текст: 3000*2 = 6000 байт ≈ 5,9 Кбайт.","Первое: 400*300*8/8 = 120 000 байт ≈ 117 Кбайт.","Второе: 200*200*24/8 = 120 000 байт ≈ 117 Кбайт.","Оба изображения равны."],
+      answer:"1) ≈5,9 Кбайт. 2) ≈117 Кбайт. 3) ≈117 Кбайт. 4) Изображения равны и оба больше текста."
+    }
+  },
+  {id:15,title:"Кодирование звука",sub:"Частота, глубина, каналы",
+    theory:["**Формула:** размер = частота × глубина × время × каналы.","","Частота — в Герцах (Гц). Глубина — в битах.","","Стерео = 2 канала.","","~~~","8000 Гц * 8 бит * 2 сек * 1 канал = 16 000 байт.","~~~","","> **Лайфхак.** Переведи всё в одну единицу перед умножением.","","!! **Ошибка.** Забыть умножить на число каналов для стерео."].join("\n"),
+    tasks:[
+      {id:"l15t1",type:"input",q:"8000 Гц * 8 бит * 2 сек * 1. Байт?",answer:"16000",explain:"16000."},
+      {id:"l15t2",type:"input",q:"4000 Гц * 16 бит * 3 сек * 1. Байт?",answer:"24000",explain:"24000."},
+      {id:"l15t3",type:"input",q:"8000 Гц * 8 бит * 1 сек * 2. Байт?",answer:"16000",explain:"16000."},
+      {id:"l15t4",type:"input",q:"Частота измеряется в?",answer:"герцах",explain:"Гц."},
+      {id:"l15t5",type:"input",q:"Стерео — сколько каналов?",answer:"2",explain:"2."}
+    ]
+  },
+  {id:16,title:"Единицы измерения информации",sub:"Биты, байты, Кбайты, Мбайты",
+    theory:["**Соотношения:**","~~~","1 байт = 8 бит","1 Кбайт = 1024 байта","1 Мбайт = 1024 Кбайта","1 Гбайт = 1024 Мбайта","~~~","","> **Лайфхак.** В информатике 1 Кбайт = 1024 байта, а не 1000.","","!! **Ошибка.** Считать по 1000 — это стандарт телекоммуникаций, но не ОГЭ."].join("\n"),
+    tasks:[
+      {id:"l16t1",type:"input",q:"Сколько бит в 1 байте?",answer:"8",explain:"8."},
+      {id:"l16t2",type:"input",q:"Сколько байт в 1 Кбайте?",answer:"1024",explain:"1024."},
+      {id:"l16t3",type:"input",q:"Сколько Кбайт в 1 Мбайте?",answer:"1024",explain:"1024."},
+      {id:"l16t4",type:"input",q:"Сколько бит в 1 Кбайте?",answer:"8192",explain:"1024*8=8192."},
+      {id:"l16t5",type:"input",q:"Сколько бит в 1 Мбайте?",answer:"8388608",explain:"1024*1024*8."}
+    ]
+  },
+  {id:17,title:"Объёмы файлов",sub:"Применяем формулы на практике",
+    theory:["Соединяем все формулы размеров.","","~~~","Текст: символов × бит на символ","Изображение: Ш × В × глубина","Звук: частота × глубина × время × каналы","~~~","","> **Лайфхак.** Сначала получи размер в битах, потом переводи в байты, Кбайты.","","!! **Ошибка.** Забыть разделить на 8 при переводе в байты."].join("\n"),
+    tasks:[
+      {id:"l17t1",type:"input",q:"Текст 100 символов ASCII. Байт?",answer:"100",explain:"100."},
+      {id:"l17t2",type:"input",q:"Изображение 50x40, 16 бит. Байт?",answer:"4000",explain:"50*40*16/8=4000."},
+      {id:"l17t3",type:"input",q:"Звук 4000 Гц * 8 бит * 3 сек. Байт?",answer:"12000",explain:"12000."},
+      {id:"l17t4",type:"input",q:"640x480, 8 бит. Кбайт?",answer:"300",explain:"300."},
+      {id:"l17t5",type:"input",q:"44100 Гц * 16 бит * 1 сек * 2. Кбайт (округли)?",answer:"172",explain:"≈172."}
+    ]
+  },
+  {id:18,title:"Практика: объёмы информации",sub:"Объединение уроков 15-17",practice:true,
+    theory:["Практика по подсчёту объёмов текста, изображений, звука."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: объёмы файлов",
+      intro:"Комплексная задача на все виды информации.",
+      task:"Школьник записал: 1) Текст 5000 символов в UTF-16. 2) Изображение 800x600, 24 бита. 3) Аудио 44100 Гц, 16 бит, 30 сек, 2 канала. Вопросы: 1) Кбайт текста? 2) Кбайт изображения? 3) Кбайт аудио? 4) Общий объём в Мбайт (округли)?",
+      steps:["Текст: 5000*2 = 10 000 байт ≈ 9,8 Кбайт.","Изображение: 800*600*24/8 = 1 440 000 байт ≈ 1406 Кбайт.","Аудио: 44100*16*30*2/8 = 5 292 000 байт ≈ 5168 Кбайт.","Всего: 9,8 + 1406 + 5168 ≈ 6584 Кбайт ≈ 6,4 Мбайт."],
+      answer:"1) ≈9,8 Кбайт. 2) ≈1406 Кбайт. 3) ≈5168 Кбайт. 4) ≈6,4 Мбайт."
+    }
+  },
+  {id:19,title:"Файловая система",sub:"Пути, имена, расширения",
+    theory:["**Полное имя** = путь + имя + расширение.","","**Расширение** — часть после последней точки.","","~~~","C:\\Users\\Ivan\\doc.txt","Путь: C:\\Users\\Ivan\\","Имя: doc, расширение: txt","~~~","","> **Лайфхак.** archive.tar.gz — расширение только gz.","","!! **Ошибка.** Путать полное имя и просто имя."].join("\n"),
+    tasks:[
+      {id:"l19t1",type:"input",q:"C:\\doc\\report.txt. Расширение?",answer:"txt",explain:"txt."},
+      {id:"l19t2",type:"input",q:"image.2024.jpeg. Расширение?",answer:"jpeg",explain:"jpeg."},
+      {id:"l19t3",type:"input",q:"archive.tar.gz. Расширений?",answer:"1",explain:"Только gz."},
+      {id:"l19t4",type:"input",q:"C:\\Users\\Ivan\\doc.txt. Последняя папка?",answer:"Ivan",explain:"Ivan."},
+      {id:"l19t5",type:"input",q:"D:\\School\\9A\\math.doc. Вложенных папок (без корня)?",answer:"2",explain:"School, 9A."}
+    ]
+  },
+  {id:20,title:"Маски и поиск файлов",sub:"Звёздочка и вопросительный знак",
+    theory:["**`*`** — любое число символов (включая 0).","**`?`** — ровно один символ.","","~~~","*.txt — все текстовые","doc.* — все с именем doc","????.txt — имя ровно из 4 символов","~~~","","> **Лайфхак.** *.txt не найдёт abc.txt.bak — там расширение bak.","","!! **Ошибка.** Думать, что ? заменяет 0 символов."].join("\n"),
+    tasks:[
+      {id:"l20t1",type:"choice",q:"Маска для текстовых?",options:["*.txt","txt.*","?.txt","txt"],answer:0,explain:"*.txt."},
+      {id:"l20t2",type:"choice",q:"Имя ровно 3 символа?",options:["*.txt","???.txt","*.3","3.txt"],answer:1,explain:"???.txt."},
+      {id:"l20t3",type:"choice",q:"*.jpg найдёт photo.png?",options:["Да","Нет","Иногда","Нельзя"],answer:1,explain:"Не .png."},
+      {id:"l20t4",type:"choice",q:"doc?.txt найдёт document.txt?",options:["Да","Нет","Иногда","Нельзя"],answer:1,explain:"? = ровно 1."},
+      {id:"l20t5",type:"choice",q:"*.* найдёт все?",options:["Да","Нет","Только с расширением","Только без"],answer:0,explain:"Все."}
+    ]
+  },
+  {id:21,title:"Практика: файловая система",sub:"Объединение уроков 19-20",practice:true,
+    theory:["Практика по путям, именам и маскам."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: файлы",
+      intro:"Задача на пути и маски.",
+      task:"В папке C:\\Users\\Student\\Docs лежат: report.txt, essay.docx, photo.jpg, image.png, note.txt, scan.pdf. 1) Полное имя report.txt. 2) Маска для всех .txt? 3) Маска для имени из 5 символов? 4) Сколько найдёт *.jpg? 5) Сколько найдёт ?????.* (имя ровно 5 символов)?",
+      steps:["Путь + имя.","*.txt найдёт report.txt, note.txt.","Имя из 5: ?????.* — например photo (5).","*.jpg — только photo.jpg.","Имя ровно 5 символов: photo(5), image(5). Итого 2 файла."],
+      answer:"1) C:\\Users\\Student\\Docs\\report.txt. 2) *.txt (2 файла). 3) ?????.* 4) 1 файл. 5) 2 файла (photo.jpg, image.png)."
+    }
+  },
+  {id:22,title:"Электронные таблицы: адресация",sub:"Ячейки, диапазоны, ссылки",
+    theory:["Адрес ячейки: буква столбца + номер строки. A1 — столбец A, строка 1.","","**Диапазон** A1:C3 — прямоугольник, 3 столбца × 3 строки = 9 ячеек.","","**Ссылки:**","~~~","A1 — относительная","$A$1 — абсолютная","$A1 или A$1 — смешанная","~~~","","> **Лайфхак.** $ замораживает часть адреса.","","!! **Ошибка.** A1 — это столбец A, строка 1."].join("\n"),
+    tasks:[
+      {id:"l22t1",type:"input",q:"A1:C3. Ячеек?",answer:"9",explain:"3*3=9."},
+      {id:"l22t2",type:"input",q:"A1:A10. Ячеек?",answer:"10",explain:"10."},
+      {id:"l22t3",type:"input",q:"B2:D5. Ячеек?",answer:"12",explain:"3*4=12."},
+      {id:"l22t4",type:"choice",q:"$A$1 — это?",options:["Относительная","Абсолютная","Смешанная","Ошибочная"],answer:1,explain:"Абсолютная."},
+      {id:"l22t5",type:"input",q:"A1:B10. Ячеек?",answer:"20",explain:"20."}
+    ]
+  },
+  {id:23,title:"Электронные таблицы: формулы",sub:"Операции и порядок",
+    theory:["**Формула** начинается со знака `=`.","","**Порядок операций:** умножение до сложения, скобки первыми.","","~~~","=A1+B1*2 — сначала B1*2","=(A1+B1)*2 — сначала сумма","~~~","","> **Лайфхак.** Проверяй порядок операций в длинных формулах.","","!! **Ошибка.** Забыть про приоритет умножения."].join("\n"),
+    tasks:[
+      {id:"l23t1",type:"input",q:"A1=4,B1=6. =A1+B1*2?",answer:"16",explain:"12+4=16."},
+      {id:"l23t2",type:"input",q:"A1=4,B1=6. =(A1+B1)*2?",answer:"20",explain:"10*2=20."},
+      {id:"l23t3",type:"input",q:"A1=10,A2=20. =A1+A2/2?",answer:"20",explain:"20."},
+      {id:"l23t4",type:"input",q:"A1=10,A2=20. =(A1+A2)/2?",answer:"15",explain:"15."},
+      {id:"l23t5",type:"input",q:"A1=3,B1=4,C1=5. =A1+B1*C1?",answer:"23",explain:"4*5+3=23."}
+    ]
+  },
+  {id:24,title:"Электронные таблицы: функции",sub:"СУММ, СРЗНАЧ, МИН, МАКС",
+    theory:["**Функции:**","~~~","СУММ(диапазон) — сумма","СРЗНАЧ(диапазон) — среднее","МИН(диапазон) — минимум","МАКС(диапазон) — максимум","СЧЁТ(диапазон) — количество","~~~","","> **Лайфхак.** Диапазон задаётся через двоеточие: A1:A5.","","!! **Ошибка.** Перепутать МИН и МАКС."].join("\n"),
+    tasks:[
+      {id:"l24t1",type:"input",q:"A1=2,A2=3,A3=5. СУММ?",answer:"10",explain:"10."},
+      {id:"l24t2",type:"input",q:"A1=3,A2=6,A3=9. СРЗНАЧ?",answer:"6",explain:"6."},
+      {id:"l24t3",type:"input",q:"A1=5,B1=3. МИН?",answer:"3",explain:"3."},
+      {id:"l24t4",type:"input",q:"A1=5,B1=3. МАКС?",answer:"5",explain:"5."},
+      {id:"l24t5",type:"input",q:"A1:A5 = 1,2,3,4,5. СУММ?",answer:"15",explain:"15."}
+    ]
+  },
+  {id:25,title:"Практика: электронные таблицы",sub:"Объединение уроков 22-24",practice:true,
+    theory:["Практика по таблицам, формулам и функциям."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: электронные таблицы",
+      intro:"Задача на формулы и функции.",
+      task:"Дана таблица: A1=15, A2=25, A3=35, A4=45, A5=55. B1=A1*2, B2=A2*2, B3=A3*2, B4=A4*2, B5=A5*2. В C1 формула: =СУММ(A1:A5)+СУММ(B1:B5). Вопросы: 1) B3? 2) СУММ(A1:A5)? 3) СУММ(B1:B5)? 4) C1? 5) Как изменятся ссылки при копировании C1 в C2?",
+      steps:["B3 = A3*2 = 70.","СУММ(A1:A5) = 175.","СУММ(B1:B5) = 30+50+70+90+110 = 350.","C1 = 175+350 = 525.","При копировании вниз: =СУММ(A2:A6)+СУММ(B2:B6)."],
+      answer:"1) 70. 2) 175. 3) 350. 4) 525. 5) =СУММ(A2:A6)+СУММ(B2:B6)."
+    }
+  },
+  {id:26,title:"Базы данных: структура",sub:"Поля, записи, ключи",
+    theory:["**Поле** — столбец. **Запись** — строка.","","**Ключ** — поле с уникальными значениями.","","~~~","ФИО     | Класс | Оценка","Иванов  | 9А    | 5","Петров  | 9А    | 4","~~~","","> **Лайфхак.** Полей — сколько столбцов. Записей — сколько строк.","","!! **Ошибка.** Путать поля и записи."].join("\n"),
+    tasks:[
+      {id:"l26t1",type:"input",q:"ФИО, Класс, Оценка. Полей?",answer:"3",explain:"3."},
+      {id:"l26t2",type:"input",q:"15 учеников. Записей?",answer:"15",explain:"15."},
+      {id:"l26t3",type:"input",q:"8 столбцов, 20 строк. Ячеек?",answer:"160",explain:"160."},
+      {id:"l26t4",type:"input",q:"Что уникально у ключа?",answer:"значение",explain:"Значение."},
+      {id:"l26t5",type:"choice",q:"Запись — это?",options:["Столбец","Строка","Ячейка","Таблица"],answer:1,explain:"Строка."}
+    ]
+  },
+  {id:27,title:"Базы данных: запросы",sub:"И, ИЛИ, НЕ в условиях",
+    theory:["**И** — оба условия. Сужает выборку.","**ИЛИ** — достаточно одного. Расширяет.","**НЕ** — инвертирует.","","~~~","Класс=9А И Оценка=5 — только 9А с пятёркой","Класс=9А ИЛИ Оценка=5 — все из 9А + все с пятёркой","~~~","","> **Лайфхак.** Если запрос ничего не даёт — замени И на ИЛИ.","","!! **Ошибка.** И ≠ ИЛИ."].join("\n"),
+    tasks:[
+      {id:"l27t1",type:"choice",q:"И означает?",options:["Одно","Оба","Исключение","Ничего"],answer:1,explain:"Оба."},
+      {id:"l27t2",type:"choice",q:"Класс=9А И Оценка=5?",options:["Всех 9А","Всех с 5","9А с 5","Никого"],answer:2,explain:"Оба."},
+      {id:"l27t3",type:"choice",q:"Оценка=5 ИЛИ Оценка=4?",options:["Только 5","Только 4","С 5 или 4","Никого"],answer:2,explain:"Любой из."},
+      {id:"l27t4",type:"choice",q:"НЕ Класс=9А?",options:["Только 9А","Все кроме 9А","Пустые","Всех"],answer:1,explain:"Кроме 9А."},
+      {id:"l27t5",type:"choice",q:"Класс=9А И Класс=9Б?",options:["9А","9Б","Оба","Никого"],answer:3,explain:"Противоречие."}
+    ]
+  },
+  {id:28,title:"Практика: базы данных",sub:"Объединение уроков 26-27",practice:true,
+    theory:["Практика по структуре и запросам."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: базы данных",
+      intro:"Задача на структуру и запросы к таблице.",
+      task:"Таблица фильмов: Название, Жанр, Год, Рейтинг. Записи: (А, комедия, 2015, 8.5), (Б, драма, 2018, 7.2), (В, комедия, 2020, 6.9), (Г, драма, 2015, 9.1), (Д, боевик, 2019, 8.0). 1) Сколько полей и записей? 2) Жанр=комедия И Рейтинг>7? 3) Год=2015 ИЛИ Год=2018? 4) Год>2015 И Рейтинг>=8? 5) НЕ Жанр=комедия?",
+      steps:["Полей 4, записей 5.","Комедии: А, В. Рейтинг>7: только А.","2015: А, Г. 2018: Б. Итого А, Г, Б.","Год>2015: Б, В, Д. Рейтинг>=8: только Д.","Не комедия: Б, Г, Д."],
+      answer:"1) 4 поля, 5 записей. 2) А. 3) А, Г, Б. 4) Д. 5) Б, Г, Д."
+    }
+  },
+  {id:29,title:"Графы: основы",sub:"Вершины, рёбра, виды",
+    theory:["**Граф** — вершины и рёбра.","","**Виды:** ориентированный, неориентированный, взвешенный.","","**Полный граф** — каждая вершина соединена с каждой. Число рёбер = n*(n-1)/2.","","**Дерево** — без циклов, n-1 рёбер.","","~~~","Полный на 5: 5*4/2 = 10 рёбер.","~~~","","> **Лайфхак.** Полный: 4=6, 5=10, 6=15, 7=21.","","!! **Ошибка.** n^2 вместо n(n-1)/2."].join("\n"),
+    tasks:[
+      {id:"l29t1",type:"input",q:"Полный на 5. Рёбер?",answer:"10",explain:"10."},
+      {id:"l29t2",type:"input",q:"Полный на 4?",answer:"6",explain:"6."},
+      {id:"l29t3",type:"input",q:"Полный на 6?",answer:"15",explain:"15."},
+      {id:"l29t4",type:"input",q:"Дерево 10 вершин. Рёбер?",answer:"9",explain:"9."},
+      {id:"l29t5",type:"input",q:"Вершина без рёбер?",answer:"изолированная",explain:"Изолированная."}
+    ]
+  },
+  {id:30,title:"Графы: пути и циклы",sub:"Подсчёт маршрутов",
+    theory:["**Путь** — последовательность рёбер.","**Цикл** — путь из вершины в неё же.","","~~~","A - B - C - D","     \\   /","       E","~~~","","> **Лайфхак.** Рисуй дерево разветвлений от стартовой вершины.","","!! **Ошибка.** A-B-C и C-B-A в неориентированном — один путь."].join("\n"),
+    tasks:[
+      {id:"l30t1",type:"input",q:"A-B,B-C,C-D,A-C. Путей A->D?",answer:"2",explain:"A-B-C-D и A-C-D."},
+      {id:"l30t2",type:"input",q:"A-B,B-C,C-D,D-A. A->C?",answer:"2",explain:"A-B-C и A-D-C."},
+      {id:"l30t3",type:"input",q:"A-B,B-C,C-A. Циклов?",answer:"1",explain:"1."},
+      {id:"l30t4",type:"choice",q:"A-B,B-C,A-C — дерево?",options:["Да","Нет","Иногда","Нельзя"],answer:1,explain:"Есть цикл."},
+      {id:"l30t5",type:"input",q:"Цепочка A-B-C-D. Рёбер?",answer:"3",explain:"3."}
+    ]
+  },
+  {id:31,title:"Взвешенные графы",sub:"Кратчайшие пути",
+    theory:["**Взвешенный граф** — у каждого ребра есть вес.","","**Кратчайший путь** — с наименьшей суммой весов.","","~~~","A-B (5), B-C (3), A-C (10).","A-C = 10, A-B-C = 8. Кратчайший: A-B-C.","~~~","","> **Лайфхак.** В маленьких графах перебирай все пути.","","!! **Ошибка.** Путать число рёбер и их вес."].join("\n"),
+    tasks:[
+      {id:"l31t1",type:"input",q:"A-B (3), B-C (4). A->C?",answer:"7",explain:"7."},
+      {id:"l31t2",type:"input",q:"A-B (5), A-C (2), C-B (1). Кратчайший A->B?",answer:"3",explain:"A-C-B=3."},
+      {id:"l31t3",type:"input",q:"A-B (4), B-C (6), A-C (10). A->C?",answer:"10",explain:"Оба 10."},
+      {id:"l31t4",type:"input",q:"A-B (2), B-C (3), C-D (4). A->D?",answer:"9",explain:"9."},
+      {id:"l31t5",type:"input",q:"Что такое вес ребра?",answer:"число",explain:"Числовая характеристика."}
+    ]
+  },
+  {id:32,title:"Практика: графы",sub:"Объединение уроков 29-31",practice:true,
+    theory:["Практика по графам, путям и кратчайшим маршрутам."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Практика: графы",
+      intro:"Задача на графы с весами.",
+      task:"Города: A-B (5), A-C (3), B-D (4), C-D (6), B-C (2), D-E (1). 1) Сколько рёбер? 2) Сколько путей из A в E? 3) Кратчайший путь? 4) Самый длинный?",
+      steps:["Рёбер 6.","Пути: A-B-D-E, A-C-D-E, A-B-C-D-E, A-C-B-D-E. Итого 4.","A-B-D-E=10, A-C-D-E=10, A-B-C-D-E=14, A-C-B-D-E=10. Кратчайший 10.","Самый длинный: A-B-C-D-E = 14."],
+      answer:"1) 6. 2) 4. 3) Кратчайший 10. 4) Самый длинный 14."
+    }
+  },
+  {id:33,title:"Передача информации: объём",sub:"Биты, байты, Мбиты",
+    theory:["**Формулы:**","~~~","Время = Объём / Скорость","Объём = Скорость × Время","Скорость = Объём / Время","~~~","","1 Мбайт = 8 Мбит. 1 Мбит/с = 1 000 000 бит/с.","","> **Лайфхак.** Мбит/с в Мбайт/с — раздели на 8.","","!! **Ошибка.** Скорость в битах, объём часто в байтах."].join("\n"),
+    tasks:[
+      {id:"l33t1",type:"input",q:"1 Мбайт — сколько Кбайт?",answer:"1024",explain:"1024."},
+      {id:"l33t2",type:"input",q:"1 Кбайт — сколько бит?",answer:"8192",explain:"8192."},
+      {id:"l33t3",type:"input",q:"1 Мбит — сколько Кбит (в ОГЭ)?",answer:"1000",explain:"1000."},
+      {id:"l33t4",type:"input",q:"1 Гбит/с — сколько Мбит/с?",answer:"1000",explain:"1000."},
+      {id:"l33t5",type:"input",q:"1 Мбайт — сколько Мбит?",answer:"8",explain:"8."}
+    ]
+  },
+  {id:34,title:"Передача информации: время",sub:"Расчёт по формуле",
+    theory:["**Время = Объём / Скорость.**","","Приводим всё к одной единице: обычно к битам и бит/с.","","~~~","1024 бита / 128 бит/с = 8 сек.","~~~","","> **Лайфхак.** Минуты в секунды — переведи заранее.","","!! **Ошибка.** Перепутать время и скорость местами."].join("\n"),
+    tasks:[
+      {id:"l34t1",type:"input",q:"1024 бита / 128 бит/с. Секунд?",answer:"8",explain:"8."},
+      {id:"l34t2",type:"input",q:"1 Мбайт за 4 сек. Мбит/с?",answer:"2",explain:"8/4=2."},
+      {id:"l34t3",type:"input",q:"2 Мбит/с, 4 Мбит. Секунд?",answer:"2",explain:"2."},
+      {id:"l34t4",type:"input",q:"512 Кбит/с, 256 Кбайт. Секунд?",answer:"4",explain:"256Кб=2048Кбит. 2048/512=4."},
+      {id:"l34t5",type:"input",q:"500 Мбайт / 100 Мбит/с. Секунд?",answer:"40",explain:"4000/100=40."}
+    ]
+  },
+  {id:35,title:"Финальная практика",sub:"Объединение уроков 33-34 и всего курса",practice:true,
+    theory:["Финальная практика по всему курсу."].join("\n"),
+    tasks:[],
+    practical:{
+      title:"Финальная практика: симуляция ОГЭ",
+      intro:"Большая задача, которая проверяет готовность к экзамену.",
+      task:"Задача: 1) Переведи 2024 в двоичную, посчитай единицы. 2) Изображение 800x600, 24 бита — сколько Мбайт? 3) Текст 5000 символов UTF-16 — сколько Кбайт? 4) Файл 3 Мбайт передаётся со скоростью 8 Мбит/с — сколько секунд? 5) Полный граф на 8 вершин — сколько рёбер? 6) Таблица 100 записей, 6 полей — сколько ячеек?",
+      steps:["2024 = 1024+512+256+128+64+32+8 = 11111101000. Единиц 8.","800*600*24 = 11 520 000 бит = 1 440 000 байт ≈ 1,37 Мбайт.","5000*2 = 10 000 байт ≈ 9,8 Кбайт.","3 Мбайт = 24 Мбит. 24/8 = 3 сек.","8*7/2 = 28.","100*6 = 600."],
+      answer:"1) 11111101000, 8 единиц. 2) ≈1,37 Мбайт. 3) ≈9,8 Кбайт. 4) 3 секунды. 5) 28 рёбер. 6) 600 ячеек."
+    }
+  }
+];
+
+var TEST_QUESTIONS=[
+  {q:"Сколько бит в одном байте?",options:["4","16","8","10"],answer:2},
+  {q:"Число 1010 в десятичной?",options:["8","10","12","14"],answer:1},
+  {q:"И истинно, когда...",options:["Оба истинны","Хотя бы одно","Оба ложны","Ровно одно"],answer:0},
+  {q:"Перо опущено — что рисует?",options:["Ничего","Точку","Линию","Ошибку"],answer:2},
+  {q:"Пути A-B, B-D, A-C, C-D. A->D?",options:["1","2","3","4"],answer:1}
+];
+
+/* ============ ФОРМАТИРОВАНИЕ ============ */
+
+function wrapSelection(ta,before,after,placeholder){
+  var start=ta.selectionStart,end=ta.selectionEnd,value=ta.value;
+  var selected=value.slice(start,end);
+  var text=selected||placeholder||"";
+  var replacement=before+text+after;
+  ta.value=value.slice(0,start)+replacement+value.slice(end);
+  if(selected){ta.selectionStart=start+before.length;ta.selectionEnd=start+before.length+text.length;}
+  else{var pos=start+before.length+text.length;ta.selectionStart=ta.selectionEnd=pos;}
+  ta.focus();
+}
+function prefixLines(ta,prefix){
+  var start=ta.selectionStart,end=ta.selectionEnd,value=ta.value;
+  var lineStart=value.lastIndexOf("\n",start-1)+1;
+  var lineEnd=value.indexOf("\n",end);
+  if(lineEnd===-1)lineEnd=value.length;
+  var block=value.slice(lineStart,lineEnd);
+  var lines=block.split("\n");
+  var allPrefixed=lines.every(function(l){return l.indexOf(prefix)===0;});
+  var newLines=lines.map(function(line){
+    if(allPrefixed)return line.slice(prefix.length);
+    if(line.indexOf(prefix)===0)return line;
+    return prefix+line;
+  });
+  var newBlock=newLines.join("\n");
+  ta.value=value.slice(0,lineStart)+newBlock+value.slice(lineEnd);
+  ta.selectionStart=lineStart;ta.selectionEnd=lineStart+newBlock.length;
+  ta.focus();
+}
+function wrapCodeBlock(ta){
+  var start=ta.selectionStart,end=ta.selectionEnd,value=ta.value;
+  var selected=value.slice(start,end);
+  var text=selected||"пример";
+  var replacement="~~~\n"+text+"\n~~~";
+  ta.value=value.slice(0,start)+replacement+value.slice(end);
+  ta.selectionStart=start+4;ta.selectionEnd=start+4+text.length;ta.focus();
+}
+function applyMdAction(ta,action){
+  if(action==="bold")wrapSelection(ta,"**","**","жирный");
+  else if(action==="italic")wrapSelection(ta,"*","*","курсив");
+  else if(action==="code")wrapSelection(ta,"`","`","код");
+  else if(action==="hack")prefixLines(ta,"> ");
+  else if(action==="warn")prefixLines(ta,"!! ");
+  else if(action==="codeblock")wrapCodeBlock(ta);
+  ta.dispatchEvent(new Event("input",{bubbles:true}));
+}
+
+/* ============ ХРАНИЛИЩЕ ============ */
+
+var LS={test:"oge_test",completed:"oge_completed",answers:"oge_answers",lessons:"oge_lessons",adminPass:"oge_admin_pass"};
+function load(key,def){try{var v=localStorage.getItem(key);if(v===null)return def;var parsed=JSON.parse(v);return parsed===null?def:parsed;}catch(e){return def;}}
+function save(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+function getLessons(){var custom=load(LS.lessons,null);if(custom&&Array.isArray(custom)&&custom.length>0)return custom;return JSON.parse(JSON.stringify(LESSONS_DEFAULT));}
+var LESSONS=getLessons();
+var state={test:load(LS.test,null),completed:load(LS.completed,{})||{},answers:load(LS.answers,{})||{}};
+var adminSession=false,draft=null,draftOriginalId=null;
+
+function normalize(s){return String(s).trim().toLowerCase().replace(/\s+/g,"").replace(/,/g,".").replace(/ё/g,"е");}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function findLesson(id){for(var i=0;i<LESSONS.length;i++)if(LESSONS[i].id===id)return LESSONS[i];return null;}
+function clone(x){return JSON.parse(JSON.stringify(x));}
+function genTaskId(){return "t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function nextLessonId(){var max=0;for(var i=0;i<LESSONS.length;i++)if(LESSONS[i].id>max)max=LESSONS[i].id;return max+1;}
+
+/* ============ ВЬЮХИ ============ */
+
+function viewHome(){
+  var testDone=state.test!==null;
+  var doneCount=0,totalTasks=0,doneTasks=0,totalPracticals=0;
+  for(var i=0;i<LESSONS.length;i++){
+    if(state.completed[LESSONS[i].id])doneCount++;
+    if(LESSONS[i].practice)totalPracticals++;
+    for(var j=0;j<LESSONS[i].tasks.length;j++){
+      totalTasks++;
+      var a=state.answers[LESSONS[i].tasks[j].id];
+      if(a&&a.ok)doneTasks++;
+    }
+  }
+  var testLine=testDone?(state.test.score+" / "+state.test.total):"не пройден";
+  return '<div class="kicker">ОГЭ · 9 класс · Информатика</div>'+
+    '<h1>Репетитор, который <em>ведёт за руку</em> и знает, где ты ошибаешься</h1>'+
+    '<p class="lead">25 уроков + 10 практических работ. Практика после каждых 2–3 уроков, объединяет их.</p>'+
+    '<div class="row" style="margin-bottom:28px">'+
+      '<button class="cta" data-goto="test">'+(testDone?"Пройти тест заново":"Пройти входной тест")+' →</button>'+
+      '<button class="btn ghost" data-goto="lessons">К урокам</button>'+
+    '</div>'+
+    '<div class="card">'+
+      '<div class="kicker">Твой прогресс</div>'+
+      '<div class="progress-row"><span>Входной тест</span><span class="val">'+testLine+'</span></div>'+
+      '<div class="progress-row"><span>Уроков и практик пройдено</span><span class="val">'+doneCount+' / '+LESSONS.length+'</span></div>'+
+      '<div class="progress-row"><span>Задач решено</span><span class="val">'+doneTasks+' / '+totalTasks+'</span></div>'+
+    '</div>';
+}
+
+function viewTest(){
+  var html='<button class="back" data-goto="home">← На главную</button>'+
+    '<div class="kicker">Шаг 1</div><h2>Входной тест</h2>'+
+    '<p class="lead">'+TEST_QUESTIONS.length+' вопросов.</p>'+
+    '<form id="quiz">';
+  for(var i=0;i<TEST_QUESTIONS.length;i++){
+    var q=TEST_QUESTIONS[i];
+    html+='<div class="q" data-a="'+q.answer+'"><p class="qt">'+(i+1)+'. '+esc(q.q)+'</p><div class="opts">';
+    for(var j=0;j<q.options.length;j++){
+      html+='<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"> '+esc(q.options[j])+'</label>';
+    }
+    html+='</div></div>';
+  }
+  html+='<div class="row" style="margin-top:20px"><button type="submit" class="btn">Проверить</button><button type="button" class="btn ghost" id="resetBtn">Сбросить</button></div></form><div class="result" id="result"></div>';
+  return html;
+}
+
+function viewLessons(){
+  var totalTasks=0;
+  for(var t=0;t<LESSONS.length;t++)totalTasks+=LESSONS[t].tasks.length;
+  var html='<button class="back" data-goto="home">← На главную</button>'+
+    '<div class="kicker">Шаг 2</div><h2>Уроки и практика</h2>'+
+    '<p class="lead">'+LESSONS.length+' элементов: теория с задачами и практические работы после каждых 2–3 уроков.</p>';
+  for(var i=0;i<LESSONS.length;i++){
+    var l=LESSONS[i];
+    var done=!!state.completed[l.id];
+    var okCount=0;
+    for(var k=0;k<l.tasks.length;k++){
+      var a=state.answers[l.tasks[k].id];
+      if(a&&a.ok)okCount++;
+    }
+    var statusText,statusClass="";
+    if(done){statusText="пройден";statusClass="done";}
+    else if(l.practice){statusText="практика";}
+    else if(okCount>0){statusText=okCount+" / "+l.tasks.length;statusClass="partial";}
+    else{statusText="не начат";}
+    var tag=l.practice?'<span class="practical-tag">ПРАКТИКА</span>':'';
+    var cls="lesson-card"+(l.practice?" practice":"");
+    html+='<div class="'+cls+'" data-lesson="'+l.id+'">';
+    html+='<div class="num">'+(l.id<10?"0"+l.id:l.id)+'</div>';
+    html+='<div class="meta"><h3>'+esc(l.title)+tag+'</h3><p class="sub">'+esc(l.sub)+'</p></div>';
+    html+='<span class="status '+statusClass+'">'+statusText+'</span></div>';
+  }
+  return html;
+}
+
+function renderPractical(p){
+  if(!p)return "";
+  var stepsHtml="";
+  if(p.steps){for(var i=0;i<p.steps.length;i++){stepsHtml+="<li>"+esc(p.steps[i])+"</li>";}}
+  return '<div class="practical">'+
+    '<div class="practical-head"><span class="practical-badge">Практика</span><h3>'+esc(p.title)+'</h3></div>'+
+    '<div class="practical-intro">'+esc(p.intro)+'</div>'+
+    '<div class="practical-task"><b>Задание</b>'+esc(p.task)+'</div>'+
+    '<details><summary>Пошаговый план решения</summary><div class="inner"><ol>'+stepsHtml+'</ol></div></details>'+
+    '<details><summary>Показать ответ</summary><div class="inner">'+esc(p.answer)+'</div></details>'+
+    '</div>';
+}
+
+function viewLesson(id){
+  var l=findLesson(id);
+  if(!l)return '<button class="back" data-goto="lessons">← К урокам</button><p>Урок не найден.</p>';
+  var isPractice=!!l.practice;
+  var html='<button class="back" data-goto="lessons">← К урокам</button>'+
+    '<div class="kicker">'+(isPractice?"ПРАКТИКА":"УРОК")+' №'+l.id+' · всего '+LESSONS.length+'</div>'+
+    '<h2>'+esc(l.title)+'</h2>'+
+    '<p class="lead">'+esc(l.sub)+'</p>'+
+    '<div class="card">'+theoryToHtml(l.theory)+'</div>';
+
+  if(l.tasks&&l.tasks.length>0){
+    html+='<h3>Задачи · '+l.tasks.length+'</h3>';
+    for(var i=0;i<l.tasks.length;i++){
+      var t=l.tasks[i];
+      var saved=state.answers[t.id];
+      html+='<div class="task" data-task="'+t.id+'">';
+      html+='<div class="label">Задача '+(i+1)+' из '+l.tasks.length+'</div>';
+      html+='<div class="qt">'+esc(t.q)+'</div>';
+      if(t.type==="input"){
+        var val=(saved&&saved.val!=null)?esc(saved.val):"";
+        html+='<input type="text" placeholder="Введи ответ" value="'+val+'" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">';
+      }else{
+        html+='<div class="opts">';
+        for(var k=0;k<t.options.length;k++){
+          var checked=(saved&&Number(saved.val)===k)?"checked":"";
+          html+='<label class="opt"><input type="radio" name="'+t.id+'" value="'+k+'" '+checked+'> '+esc(t.options[k])+'</label>';
+        }
+        html+='</div>';
+      }
+      html+='<div style="margin-top:12px"><button class="btn" data-check="'+t.id+'">Проверить</button></div>';
+      html+='<div class="feedback" id="fb-'+t.id+'"></div>';
+      html+='<div class="explain" id="ex-'+t.id+'"></div></div>';
+    }
+    html+='<div id="lessonDone" style="margin-top:20px"></div>';
+  }
+
+  html+=renderPractical(l.practical);
+
+  var idx=-1;
+  for(var m=0;m<LESSONS.length;m++)if(LESSONS[m].id===l.id)idx=m;
+  var nextL=(idx>=0&&idx<LESSONS.length-1)?LESSONS[idx+1]:null;
+  var prevL=(idx>0)?LESSONS[idx-1]:null;
+  html+='<div class="row" style="margin-top:24px">';
+  if(prevL)html+='<button class="btn ghost" data-lesson-nav="'+prevL.id+'">← Назад</button>';
+  if(nextL)html+='<button class="btn" data-lesson-nav="'+nextL.id+'">Далее →</button>';
+  html+='</div>';
+  return html;
+}
+
+function viewProgress(){
+  var doneCount=0,doneTasks=0,totalTasks=0;
+  for(var i=0;i<LESSONS.length;i++){
+    var l=LESSONS[i];
+    if(state.completed[l.id])doneCount++;
+    for(var j=0;j<l.tasks.length;j++){
+      totalTasks++;
+      var a=state.answers[l.tasks[j].id];
+      if(a&&a.ok)doneTasks++;
+    }
+  }
+  var html='<button class="back" data-goto="home">← На главную</button>'+
+    '<div class="kicker">Шаг 3</div><h2>Прогресс</h2>'+
+    '<div class="card" style="text-align:center"><div class="big-stat">'+doneTasks+'<span> / '+totalTasks+'</span></div>'+
+    '<div style="color:var(--muted);font-size:13px;margin-top:8px">задач решено верно</div></div>'+
+    '<div class="card">'+
+    '<div class="progress-row"><span>Входной тест</span><span class="val">'+(state.test?(state.test.score+" / "+state.test.total):"не пройден")+'</span></div>'+
+    '<div class="progress-row"><span>Пройдено уроков и практик</span><span class="val">'+doneCount+' / '+LESSONS.length+'</span></div>';
+  for(var i2=0;i2<LESSONS.length;i2++){
+    var l2=LESSONS[i2];
+    var okInLesson=0;
+    for(var j2=0;j2<l2.tasks.length;j2++){
+      var a2=state.answers[l2.tasks[j2].id];
+      if(a2&&a2.ok)okInLesson++;
+    }
+    var isDone=!!state.completed[l2.id];
+    var valText;
+    if(isDone)valText="пройден";
+    else if(l2.practice)valText="практика";
+    else valText=okInLesson+" / "+l2.tasks.length;
+    html+='<div class="progress-row"><span>'+l2.id+'. '+esc(l2.title)+'</span><span class="val">'+valText+'</span></div>';
+  }
+  html+='</div>';
+  html+='<div class="row" style="margin-top:20px"><button class="cta" data-goto="lessons">К урокам →</button><button class="btn ghost" id="resetProgress">Сбросить прогресс</button></div>';
+  return html;
+}
+
+/* ============ АДМИНКА ============ */
+
+function getAdminPass(){return load(LS.adminPass,"admin");}
+function viewAdmin(){return adminSession?viewAdminDashboard():viewAdminLogin();}
+
+function viewAdminLogin(){
+  return '<button class="back" data-goto="home">← На главную</button>'+
+    '<div class="kicker">Админ-панель</div><h2>Вход</h2>'+
+    '<p class="lead">Пароль по умолчанию: <code>admin</code></p>'+
+    '<div class="card"><div class="field"><label>Пароль</label><input type="password" id="adminPass" autocomplete="off"></div>'+
+    '<button class="btn" id="adminLogin" style="width:100%">Войти</button><div id="adminMsg" style="margin-top:14px"></div></div>';
+}
+
+function viewAdminDashboard(){
+  var stats={lessons:LESSONS.length,tasks:0,practicals:0,doneTasks:0};
+  for(var i=0;i<LESSONS.length;i++){
+    stats.tasks+=LESSONS[i].tasks.length;
+    if(LESSONS[i].practice)stats.practicals++;
+    for(var j=0;j<LESSONS[i].tasks.length;j++){
+      var a=state.answers[LESSONS[i].tasks[j].id];
+      if(a&&a.ok)stats.doneTasks++;
+    }
+  }
+  var html='<button class="back" data-goto="home">← На главную</button>'+
+    '<div class="kicker">Админ-панель</div><h2>Управление</h2>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-box"><div class="n">'+stats.lessons+'</div><div class="l">элементов</div></div>'+
+    '<div class="stat-box"><div class="n">'+stats.tasks+'</div><div class="l">задач</div></div>'+
+    '<div class="stat-box"><div class="n">'+stats.practicals+'</div><div class="l">практик</div></div>'+
+    '<div class="stat-box"><div class="n">'+stats.doneTasks+'</div><div class="l">решено</div></div></div>'+
+    '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">'+
+    '<h3 style="margin:0">Список</h3><button class="btn" data-new-lesson>+ Добавить</button></div><div id="lessonsList">';
+  if(LESSONS.length===0){html+='<p style="color:var(--muted)">Пусто.</p>';}
+  else{
+    for(var k=0;k<LESSONS.length;k++){
+      var l=LESSONS[k];
+      var cls="admin-lesson-row"+(l.practice?" practice":"");
+      html+='<div class="'+cls+'"><div class="num">'+(l.id<10?"0"+l.id:l.id)+'</div><div class="info">';
+      html+='<h4>'+esc(l.title||"(без названия)")+(l.practice?' · ПРАКТИКА':'')+'</h4>';
+      html+='<div class="sub">'+(l.practice?"Практика":l.tasks.length+" задач")+' · '+esc(l.sub||"")+'</div></div>';
+      html+='<div class="tools">'+
+        '<button class="tool-btn" data-lesson-up="'+l.id+'"'+(k===0?' disabled':'')+'>↑</button>'+
+        '<button class="tool-btn" data-lesson-down="'+l.id+'"'+(k===LESSONS.length-1?' disabled':'')+'>↓</button>'+
+        '<button class="tool-btn" data-lesson-edit="'+l.id+'">✎</button>'+
+        '<button class="tool-btn danger" data-lesson-delete="'+l.id+'">✕</button>'+
+        '</div></div>';
+    }
+  }
+  html+='</div></div>'+
+    '<div class="card"><h3 style="margin-top:0">Сменить пароль</h3>'+
+    '<div class="field"><label>Новый пароль</label><input type="password" id="newPass"></div>'+
+    '<div class="field"><label>Повтори</label><input type="password" id="newPass2"></div>'+
+    '<button class="btn" id="changePass" style="width:100%">Сменить</button><div id="passMsg" style="margin-top:14px"></div></div>'+
+    '<div class="card"><h3 style="margin-top:0">Данные</h3><div class="row">'+
+    '<button class="btn ghost" id="exportData">Экспорт</button>'+
+    '<button class="btn ghost" id="importData">Импорт</button>'+
+    '<button class="btn danger" id="resetLessonsBtn">Сбросить уроки</button>'+
+    '<button class="btn danger" id="adminReset">Сбросить прогресс</button>'+
+    '<button class="btn ghost" id="logout">Выйти</button></div></div>';
+  return html;
+}
+
+/* ============ РЕДАКТОР ============ */
+
+function viewLessonEditor(){
+  if(!draft)return '<p>Нет черновика.</p><button class="back" data-goto="admin">← В админку</button>';
+  var isNew=draftOriginalId===null;
+  var isPractice=!!draft.practice;
+  var html='<button class="back" data-editor-cancel>← В админку</button>'+
+    '<div class="kicker">'+(isNew?"Новый":"Редактор")+'</div>'+
+    '<h2>'+(isNew?"Создание":esc(draft.title||"Без названия"))+'</h2>'+
+    '<div class="card">'+
+      '<div class="field"><label>ID</label><input type="number" data-draft-field="id" value="'+draft.id+'" min="1"></div>'+
+      '<div class="field"><label>Название</label><input type="text" data-draft-field="title" value="'+esc(draft.title)+'"></div>'+
+      '<div class="field"><label>Подзаголовок</label><input type="text" data-draft-field="sub" value="'+esc(draft.sub)+'"></div>'+
+      '<div class="field"><label><input type="checkbox" id="practiceCheck"'+(isPractice?' checked':'')+' style="width:auto;margin-right:8px;min-height:auto">Это практический урок</label></div>'+
+      '<div class="field"><label>Теория</label>'+
+        '<div class="md-toolbar">'+
+          '<button type="button" class="md-btn" data-md="bold"><b>Ж</b></button>'+
+          '<button type="button" class="md-btn" data-md="italic"><i>К</i></button>'+
+          '<button type="button" class="md-btn" data-md="code"><span class="mono">&lt;/&gt;</span></button>'+
+          '<span class="md-sep"></span>'+
+          '<button type="button" class="md-btn" data-md="hack">Лайфхак</button>'+
+          '<button type="button" class="md-btn" data-md="warn">Ошибка</button>'+
+          '<button type="button" class="md-btn" data-md="codeblock">Пример</button>'+
+        '</div>'+
+        '<textarea id="theoryTextarea" data-draft-field="theory">'+esc(draft.theory)+'</textarea>'+
+        '<details class="theory-preview-wrap"><summary>Предпросмотр</summary><div class="theory-preview" id="theoryPreview">'+theoryToHtml(draft.theory)+'</div></details>'+
+      '</div>'+
+    '</div>';
+
+  if(!isPractice){
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:22px 0 12px"><h3 style="margin:0">Задачи ('+draft.tasks.length+')</h3><button class="btn sm" data-add-task>+ Задача</button></div><div id="tasksEditor"></div>';
+  }
+
+  html+='<h3>Практическая работа</h3><div class="card">'+
+    '<div class="field"><label>Заголовок</label><input type="text" data-practical-field="title" value="'+esc(draft.practical?draft.practical.title:"")+'"></div>'+
+    '<div class="field"><label>Вступление</label><input type="text" data-practical-field="intro" value="'+esc(draft.practical?draft.practical.intro:"")+'"></div>'+
+    '<div class="field"><label>Задание</label><textarea data-practical-field="task" style="min-height:150px;font-family:inherit;font-size:15px">'+esc(draft.practical?draft.practical.task:"")+'</textarea></div>'+
+    '<div class="field"><label>Шаги (по одному на строку)</label><textarea data-practical-field="steps" style="min-height:120px;font-family:inherit;font-size:15px">'+esc(draft.practical&&draft.practical.steps?draft.practical.steps.join("\n"):"")+'</textarea></div>'+
+    '<div class="field"><label>Ответ</label><textarea data-practical-field="answer" style="min-height:80px;font-family:inherit;font-size:15px">'+esc(draft.practical?draft.practical.answer:"")+'</textarea></div>'+
+    '</div>'+
+    '<div class="editor-actions"><button class="btn" data-save-lesson>Сохранить</button><button class="btn ghost" data-editor-cancel>Отмена</button></div>';
+  return html;
+}
+
+function renderTasksEditorHtml(){
+  if(draft.tasks.length===0)return '<div class="card" style="text-align:center;color:var(--muted);font-size:14px">Нет задач.</div>';
+  var html="";
+  for(var i=0;i<draft.tasks.length;i++)html+=renderTaskEditorHtml(draft.tasks[i],i);
+  return html;
+}
+
+function renderTaskEditorHtml(t,i){
+  var isChoice=t.type==="choice";
+  var html='<div class="task-editor" data-task-index="'+i+'">';
+  html+='<div class="task-editor-head"><b>Задача '+(i+1)+'</b><div class="task-editor-tools">';
+  html+='<button class="tool-btn" data-task-up="'+i+'"'+(i===0?' disabled':'')+'>↑</button>';
+  html+='<button class="tool-btn" data-task-down="'+i+'"'+(i===draft.tasks.length-1?' disabled':'')+'>↓</button>';
+  html+='<button class="tool-btn danger" data-task-remove="'+i+'">✕</button></div></div>';
+  html+='<div class="field"><label>Тип</label><select data-task-field="type" data-task-index="'+i+'"><option value="input"'+(isChoice?'':' selected')+'>Ввод</option><option value="choice"'+(isChoice?' selected':'')+'>Выбор</option></select></div>';
+  html+='<div class="field"><label>Вопрос</label><input type="text" data-task-field="q" data-task-index="'+i+'" value="'+esc(t.q)+'"></div>';
+  if(!isChoice){
+    html+='<div class="field"><label>Ответ</label><input type="text" data-task-field="answer" data-task-index="'+i+'" value="'+esc(t.answer)+'"></div>';
+  }else{
+    html+='<div class="field"><label>Варианты</label><div>';
+    var opts=t.options||[];
+    for(var j=0;j<opts.length;j++){
+      var isCorrect=Number(t.answer)===j;
+      html+='<div class="opt-row'+(isCorrect?' correct':'')+'">'+
+        '<input type="radio" class="opt-radio" name="correct-'+i+'" data-opt-correct="'+i+'" data-opt-index="'+j+'"'+(isCorrect?' checked':'')+'>'+
+        '<input type="text" class="opt-text" data-opt-text="'+i+'" data-opt-index="'+j+'" value="'+esc(opts[j])+'">'+
+        '<button class="opt-remove" data-opt-remove="'+i+'" data-opt-index="'+j+'">✕</button></div>';
+    }
+    html+='</div><button class="btn sm ghost" data-opt-add="'+i+'">+ Вариант</button></div>';
+  }
+  html+='<div class="field"><label>Разбор</label><textarea data-task-field="explain" data-task-index="'+i+'" style="min-height:80px;font-family:inherit;font-size:14px">'+esc(t.explain||"")+'</textarea></div></div>';
+  return html;
+}
+
+function syncDraftFromDOM(){
+  if(!draft)return;
+  document.querySelectorAll("[data-draft-field]").forEach(function(el){
+    var key=el.getAttribute("data-draft-field");
+    if(key==="id"){var n=parseInt(el.value,10);draft.id=isNaN(n)?0:n;}
+    else{draft[key]=el.value;}
+  });
+  var pTitle=document.querySelector('[data-practical-field="title"]');
+  var pIntro=document.querySelector('[data-practical-field="intro"]');
+  var pTask=document.querySelector('[data-practical-field="task"]');
+  var pSteps=document.querySelector('[data-practical-field="steps"]');
+  var pAnswer=document.querySelector('[data-practical-field="answer"]');
+  if(pTitle&&pTask&&pAnswer&&(pTitle.value.trim()||pTask.value.trim())){
+    draft.practical={title:pTitle.value||"Практика",intro:pIntro?pIntro.value:"",task:pTask.value,steps:pSteps?pSteps.value.split("\n").filter(function(s){return s.trim()!=="";}):[],answer:pAnswer.value};
+  }else if(pTitle){delete draft.practical;}
+  var chk=document.getElementById("practiceCheck");
+  if(chk)draft.practice=chk.checked;
+  document.querySelectorAll(".task-editor").forEach(function(taskEl){
+    var idx=parseInt(taskEl.getAttribute("data-task-index"),10);
+    var t=draft.tasks[idx];if(!t)return;
+    var typeSel=taskEl.querySelector('[data-task-field="type"]');if(typeSel)t.type=typeSel.value;
+    var qEl=taskEl.querySelector('[data-task-field="q"]');if(qEl)t.q=qEl.value;
+    var ansEl=taskEl.querySelector('[data-task-field="answer"]');if(ansEl&&t.type==="input")t.answer=ansEl.value;
+    var expEl=taskEl.querySelector('[data-task-field="explain"]');if(expEl)t.explain=expEl.value;
+    if(t.type==="choice"){
+      var newOpts=[],newCorrect=0;
+      taskEl.querySelectorAll(".opt-row").forEach(function(row,k){
+        var textInp=row.querySelector(".opt-text");var radio=row.querySelector(".opt-radio");
+        newOpts.push(textInp?textInp.value:"");if(radio&&radio.checked)newCorrect=k;
+      });
+      t.options=newOpts;t.answer=newCorrect;
+    }else{delete t.options;}
+  });
+}
+
+/* ============ ЛОГИКА АДМИНКИ ============ */
+
+function bindAdmin(){
+  var loginBtn=document.getElementById("adminLogin");
+  if(loginBtn){
+    var doLogin=function(){
+      var inp=document.getElementById("adminPass");var msg=document.getElementById("adminMsg");
+      if(inp.value===getAdminPass()){adminSession=true;render();}
+      else{msg.innerHTML='<div class="alert err">Неверный пароль</div>';}
+    };
+    loginBtn.addEventListener("click",doLogin);
+    var inp=document.getElementById("adminPass");
+    if(inp){inp.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();doLogin();}});setTimeout(function(){try{inp.focus();}catch(e){}},100);}
+    return;
+  }
+  var newBtn=document.querySelector("[data-new-lesson]");
+  if(newBtn)newBtn.addEventListener("click",function(){draft={id:nextLessonId(),title:"",sub:"",theory:"",tasks:[]};draftOriginalId=null;navigate("lesson-edit");});
+  document.querySelectorAll("[data-lesson-edit]").forEach(function(btn){
+    btn.addEventListener("click",function(){var id=parseInt(btn.getAttribute("data-lesson-edit"),10);var l=findLesson(id);if(!l)return;draft=clone(l);draftOriginalId=id;navigate("lesson-edit");});
+  });
+  document.querySelectorAll("[data-lesson-delete]").forEach(function(btn){
+    btn.addEventListener("click",function(){var id=parseInt(btn.getAttribute("data-lesson-delete"),10);var l=findLesson(id);if(!l)return;if(!confirm('Удалить "'+l.title+'"?'))return;for(var i=0;i<LESSONS.length;i++)if(LESSONS[i].id===id){LESSONS.splice(i,1);break;}save(LS.lessons,LESSONS);render();});
+  });
+  document.querySelectorAll("[data-lesson-up]").forEach(function(btn){
+    btn.addEventListener("click",function(){var id=parseInt(btn.getAttribute("data-lesson-up"),10);for(var i=0;i<LESSONS.length;i++){if(LESSONS[i].id===id&&i>0){var tmp=LESSONS[i-1];LESSONS[i-1]=LESSONS[i];LESSONS[i]=tmp;break;}}save(LS.lessons,LESSONS);render();});
+  });
+  document.querySelectorAll("[data-lesson-down]").forEach(function(btn){
+    btn.addEventListener("click",function(){var id=parseInt(btn.getAttribute("data-lesson-down"),10);for(var i=0;i<LESSONS.length;i++){if(LESSONS[i].id===id&&i<LESSONS.length-1){var tmp=LESSONS[i+1];LESSONS[i+1]=LESSONS[i];LESSONS[i]=tmp;break;}}save(LS.lessons,LESSONS);render();});
+  });
+  var cp=document.getElementById("changePass");
+  if(cp)cp.addEventListener("click",function(){
+    var p1=document.getElementById("newPass").value;var p2=document.getElementById("newPass2").value;var msg=document.getElementById("passMsg");
+    if(!p1||p1.length<3){msg.innerHTML='<div class="alert err">Минимум 3</div>';return;}
+    if(p1!==p2){msg.innerHTML='<div class="alert err">Не совпадают</div>';return;}
+    save(LS.adminPass,p1);msg.innerHTML='<div class="alert ok">Изменено</div>';
+    document.getElementById("newPass").value="";document.getElementById("newPass2").value="";
+  });
+  var ex=document.getElementById("exportData");
+  if(ex)ex.addEventListener("click",function(){
+    var data={test:state.test,completed:state.completed,answers:state.answers,lessons:LESSONS};
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    var url=URL.createObjectURL(blob);var a=document.createElement("a");
+    a.href=url;a.download="oge-export-"+Date.now()+".json";a.click();URL.revokeObjectURL(url);
+  });
+  var im=document.getElementById("importData");
+  if(im)im.addEventListener("click",function(){
+    var input=document.createElement("input");input.type="file";input.accept=".json";
+    input.onchange=function(){var f=input.files[0];if(!f)return;var r=new FileReader();
+      r.onload=function(){try{var data=JSON.parse(r.result);
+        if(data.test!==undefined){state.test=data.test;save(LS.test,data.test);}
+        if(data.completed){state.completed=data.completed;save(LS.completed,data.completed);}
+        if(data.answers){state.answers=data.answers;save(LS.answers,data.answers);}
+        if(data.lessons){save(LS.lessons,data.lessons);LESSONS=data.lessons;}
+        alert("Импортировано");render();}catch(e){alert("Ошибка: "+e.message);}};
+      r.readAsText(f);};
+    input.click();
+  });
+  var rl=document.getElementById("resetLessonsBtn");
+  if(rl)rl.addEventListener("click",function(){if(confirm("Сбросить уроки?")){localStorage.removeItem(LS.lessons);LESSONS=clone(LESSONS_DEFAULT);render();}});
+  var rr=document.getElementById("adminReset");
+  if(rr)rr.addEventListener("click",function(){if(confirm("Сбросить прогресс?")){localStorage.removeItem(LS.test);localStorage.removeItem(LS.completed);localStorage.removeItem(LS.answers);state={test:null,completed:{},answers:{}};render();}});
+  var lo=document.getElementById("logout");
+  if(lo)lo.addEventListener("click",function(){adminSession=false;render();});
+}
+
+/* ============ ЛОГИКА РЕДАКТОРА ============ */
+
+function bindLessonEditor(){
+  if(!draft)return;
+  document.querySelectorAll("[data-draft-field]").forEach(function(el){
+    el.addEventListener("input",function(){
+      var key=el.getAttribute("data-draft-field");
+      if(key==="id"){var n=parseInt(el.value,10);draft.id=isNaN(n)?0:n;}
+      else{draft[key]=el.value;}
+      if(key==="theory"){var prev=document.getElementById("theoryPreview");if(prev)prev.innerHTML=theoryToHtml(el.value);}
+    });
+  });
+  var chk=document.getElementById("practiceCheck");
+  if(chk)chk.addEventListener("change",function(){syncDraftFromDOM();draft.practice=chk.checked;navigate("lesson-edit");});
+  var tasksContainer=document.getElementById("tasksEditor");
+  if(tasksContainer){tasksContainer.innerHTML=renderTasksEditorHtml();bindTaskEditors();}
+  bindTheoryToolbar();
+  document.querySelectorAll("[data-add-task]").forEach(function(btn){
+    btn.addEventListener("click",function(){syncDraftFromDOM();if(!draft.tasks)draft.tasks=[];draft.tasks.push({id:genTaskId(),type:"input",q:"",answer:"",explain:""});tasksContainer.innerHTML=renderTasksEditorHtml();bindTaskEditors();});
+  });
+  document.querySelectorAll("[data-save-lesson]").forEach(function(btn){btn.addEventListener("click",saveDraftLesson);});
+  document.querySelectorAll("[data-editor-cancel]").forEach(function(btn){
+    btn.addEventListener("click",function(){if(confirm("Выйти без сохранения?")){draft=null;draftOriginalId=null;navigate("admin");}});
+  });
+}
+
+function bindTheoryToolbar(){
+  var ta=document.getElementById("theoryTextarea");
+  if(!ta)return;
+  document.querySelectorAll("[data-md]").forEach(function(btn){
+    btn.addEventListener("mousedown",function(e){e.preventDefault();});
+    btn.addEventListener("click",function(e){e.preventDefault();applyMdAction(ta,btn.getAttribute("data-md"));});
+  });
+  ta.addEventListener("keydown",function(e){
+    if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&!e.altKey){
+      var k=e.key.toLowerCase();
+      if(k==="b"){e.preventDefault();applyMdAction(ta,"bold");}
+      else if(k==="i"){e.preventDefault();applyMdAction(ta,"italic");}
+    }
+  });
+  ta.addEventListener("input",function(){var prev=document.getElementById("theoryPreview");if(prev)prev.innerHTML=theoryToHtml(ta.value);});
+}
+
+function bindTaskEditors(){
+  document.querySelectorAll('[data-task-field="type"]').forEach(function(sel){
+    sel.addEventListener("change",function(){
+      syncDraftFromDOM();
+      var idx=parseInt(sel.getAttribute("data-task-index"),10);
+      var t=draft.tasks[idx];if(!t)return;
+      t.type=sel.value;
+      if(t.type==="choice"){if(!t.options||t.options.length===0){t.options=["","","",""];t.answer=0;}if(typeof t.answer!=="number")t.answer=0;}
+      else{delete t.options;if(typeof t.answer!=="string")t.answer="";}
+      var container=document.getElementById("tasksEditor");
+      container.innerHTML=renderTasksEditorHtml();bindTaskEditors();
+    });
+  });
+  document.querySelectorAll("[data-task-field]").forEach(function(el){
+    var field=el.getAttribute("data-task-field");if(field==="type")return;
+    el.addEventListener("input",function(){
+      var idx=parseInt(el.getAttribute("data-task-index"),10);var t=draft.tasks[idx];if(!t)return;
+      if(field==="q")t.q=el.value;else if(field==="answer")t.answer=el.value;else if(field==="explain")t.explain=el.value;
+    });
+  });
+  document.querySelectorAll(".opt-text").forEach(function(el){
+    el.addEventListener("input",function(){
+      var idx=parseInt(el.getAttribute("data-opt-text"),10);var optIdx=parseInt(el.getAttribute("data-opt-index"),10);
+      var t=draft.tasks[idx];if(!t||!t.options)return;t.options[optIdx]=el.value;
+    });
+  });
+  document.querySelectorAll(".opt-radio").forEach(function(el){
+    el.addEventListener("change",function(){
+      var idx=parseInt(el.getAttribute("data-opt-correct"),10);var optIdx=parseInt(el.getAttribute("data-opt-index"),10);
+      var t=draft.tasks[idx];if(!t)return;t.answer=optIdx;
+      var taskEl=el.closest(".task-editor");
+      if(taskEl){taskEl.querySelectorAll(".opt-row").forEach(function(row){row.classList.remove("correct");});el.closest(".opt-row").classList.add("correct");}
+    });
+  });
+  document.querySelectorAll("[data-opt-add]").forEach(function(btn){
+    btn.addEventListener("click",function(){syncDraftFromDOM();var idx=parseInt(btn.getAttribute("data-opt-add"),10);var t=draft.tasks[idx];if(!t)return;if(!t.options)t.options=[];t.options.push("");var container=document.getElementById("tasksEditor");container.innerHTML=renderTasksEditorHtml();bindTaskEditors();});
+  });
+  document.querySelectorAll("[data-opt-remove]").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      syncDraftFromDOM();var idx=parseInt(btn.getAttribute("data-opt-remove"),10);var optIdx=parseInt(btn.getAttribute("data-opt-index"),10);
+      var t=draft.tasks[idx];if(!t||!t.options)return;if(t.options.length<=2){alert("Минимум 2");return;}
+      t.options.splice(optIdx,1);if(t.answer>=t.options.length)t.answer=0;if(t.answer>optIdx)t.answer=t.answer-1;
+      var container=document.getElementById("tasksEditor");container.innerHTML=renderTasksEditorHtml();bindTaskEditors();
+    });
+  });
+  document.querySelectorAll("[data-task-up]").forEach(function(btn){
+    btn.addEventListener("click",function(){syncDraftFromDOM();var i=parseInt(btn.getAttribute("data-task-up"),10);if(i<=0)return;var tmp=draft.tasks[i-1];draft.tasks[i-1]=draft.tasks[i];draft.tasks[i]=tmp;var container=document.getElementById("tasksEditor");container.innerHTML=renderTasksEditorHtml();bindTaskEditors();});
+  });
+  document.querySelectorAll("[data-task-down]").forEach(function(btn){
+    btn.addEventListener("click",function(){syncDraftFromDOM();var i=parseInt(btn.getAttribute("data-task-down"),10);if(i>=draft.tasks.length-1)return;var tmp=draft.tasks[i+1];draft.tasks[i+1]=draft.tasks[i];draft.tasks[i]=tmp;var container=document.getElementById("tasksEditor");container.innerHTML=renderTasksEditorHtml();bindTaskEditors();});
+  });
+  document.querySelectorAll("[data-task-remove]").forEach(function(btn){
+    btn.addEventListener("click",function(){syncDraftFromDOM();var i=parseInt(btn.getAttribute("data-task-remove"),10);if(!confirm("Удалить задачу "+(i+1)+"?"))return;draft.tasks.splice(i,1);var container=document.getElementById("tasksEditor");container.innerHTML=renderTasksEditorHtml();bindTaskEditors();});
+  });
+}
+
+function saveDraftLesson(){
+  if(!draft)return;
+  syncDraftFromDOM();
+  if(!draft.title||!draft.title.trim()){alert("Введите название");return;}
+  if(!draft.id||draft.id<1){alert("ID положительный");return;}
+  for(var i=0;i<LESSONS.length;i++){if(LESSONS[i].id===draft.id&&LESSONS[i].id!==draftOriginalId){alert("ID занят");return;}}
+  if(!draft.practice){
+    if(!draft.tasks)draft.tasks=[];
+    for(var j=0;j<draft.tasks.length;j++){
+      var t=draft.tasks[j];
+      if(!t.q||!t.q.trim()){alert("Задача "+(j+1)+": нет вопроса");return;}
+      if(t.type==="input"){if(!t.answer||!String(t.answer).trim()){alert("Задача "+(j+1)+": нет ответа");return;}}
+      else if(t.type==="choice"){
+        if(!t.options||t.options.length<2){alert("Задача "+(j+1)+": нужно 2+ варианта");return;}
+        for(var k=0;k<t.options.length;k++){if(!t.options[k]||!t.options[k].trim()){alert("Задача "+(j+1)+": пустой вариант");return;}}
+      }
+    }
+  }else{if(!draft.practical){alert("Заполните практику");return;}}
+  var clean=clone(draft);
+  if(clean.tasks){for(var m=0;m<clean.tasks.length;m++){var ct=clean.tasks[m];if(ct.type==="input"){delete ct.options;ct.answer=String(ct.answer);}else if(ct.type==="choice"){ct.answer=Number(ct.answer)||0;}}}
+  var found=false;
+  if(draftOriginalId!==null){for(var n=0;n<LESSONS.length;n++){if(LESSONS[n].id===draftOriginalId){LESSONS[n]=clean;found=true;break;}}}
+  if(!found)LESSONS.push(clean);
+  save(LS.lessons,LESSONS);draft=null;draftOriginalId=null;navigate("admin");
+}
+
+/* ============ ПРОВЕРКА ЗАДАЧ ============ */
+
+function checkTask(t){
+  var task=document.querySelector('[data-task="'+t.id+'"]');
+  if(!task)return;
+  var ok=false,val;
+  if(t.type==="choice"){
+    var checked=task.querySelector("input:checked");
+    if(!checked){showFeedback(t,false,false,"Выбери вариант.");return;}
+    val=parseInt(checked.value,10);ok=val===t.answer;
+    var opts=task.querySelectorAll(".opt");
+    for(var i=0;i<opts.length;i++)opts[i].classList.remove("correct","wrong");
+    if(opts[t.answer])opts[t.answer].classList.add("correct");
+    if(!ok)checked.parentElement.classList.add("wrong");
+  }else{
+    var input=task.querySelector('input[type="text"]');
+    val=input.value;
+    if(!val.trim()){showFeedback(t,false,false,"Введи ответ.");return;}
+    ok=normalize(val)===normalize(t.answer);
+    input.style.borderColor=ok?"var(--ok)":"var(--err)";
+  }
+  state.answers[t.id]={ok:ok,val:val};save(LS.answers,state.answers);
+  showFeedback(t,ok,true);
+  var lessonId=null;
+  for(var li=0;li<LESSONS.length;li++){for(var ti=0;ti<LESSONS[li].tasks.length;ti++){if(LESSONS[li].tasks[ti].id===t.id){lessonId=LESSONS[li].id;break;}}if(lessonId!==null)break;}
+  if(lessonId!==null)updateLessonDone(lessonId);
+}
+
+function showFeedback(t,ok,show,msg){
+  var fb=document.getElementById("fb-"+t.id);
+  var ex=document.getElementById("ex-"+t.id);
+  if(!fb)return;
+  if(!show){fb.textContent=msg||"";fb.className="feedback show err";return;}
+  fb.textContent=ok?"✓ Верно":"✗ Неверно. Посмотри разбор.";
+  fb.className="feedback show "+(ok?"ok":"err");
+  if(t.explain&&ex){ex.innerHTML="<b>Разбор:</b> "+t.explain;ex.classList.add("show");}
+}
+
+function updateLessonDone(lessonId){
+  var l=findLesson(lessonId);
+  if(!l||!l.tasks||l.tasks.length===0)return;
+  var allOk=true;
+  for(var j=0;j<l.tasks.length;j++){var a=state.answers[l.tasks[j].id];if(!a||!a.ok){allOk=false;break;}}
+  var box=document.getElementById("lessonDone");
+  if(allOk){
+    if(!state.completed[lessonId]){state.completed[lessonId]=true;save(LS.completed,state.completed);}
+    if(box)box.innerHTML='<div class="card" style="border-left:4px solid var(--ok)"><b>✓ Урок пройден.</b><br><br><button class="cta" data-goto="lessons">К урокам</button></div>';
+    if(box)bindGoto(box);
+  }else if(box)box.innerHTML="";
+}
+
+function bindTest(){
+  var form=document.getElementById("quiz");
+  var result=document.getElementById("result");
+  if(form){
+    form.addEventListener("submit",function(e){
+      e.preventDefault();
+      var score=0,answered=0;
+      var qs=document.querySelectorAll(".q");
+      for(var i=0;i<qs.length;i++){
+        var q=qs[i];
+        var correct=parseInt(q.getAttribute("data-a"),10);
+        var opts=q.querySelectorAll(".opt");
+        var checked=q.querySelector("input:checked");
+        for(var k=0;k<opts.length;k++)opts[k].classList.remove("correct","wrong");
+        if(checked){
+          answered++;var val=parseInt(checked.value,10);
+          if(val===correct){score++;checked.parentElement.classList.add("correct");}
+          else{checked.parentElement.classList.add("wrong");if(opts[correct])opts[correct].classList.add("correct");}
+        }else{if(opts[correct])opts[correct].classList.add("correct");}
+      }
+      if(answered<qs.length){result.innerHTML="<b>Ответь на все.</b><br>Отвечено "+answered+" из "+qs.length+".";result.classList.add("show");return;}
+      state.test={score:score,total:qs.length};save(LS.test,state.test);
+      var msg="";
+      if(score<=2)msg="База проседает. Начни с урока 01.";
+      else if(score===3)msg="Середина. Уроки 02 и 03 — твои.";
+      else if(score===4)msg="Хорошо. Один шаг до четвёрки.";
+      else msg="Отлично. Нужна тренировка на скорость.";
+      result.innerHTML="<b>Результат: "+score+" из "+qs.length+"</b><br>"+msg+'<br><br><button class="cta" data-goto="lessons">К урокам →</button>';
+      result.classList.add("show");bindGoto(result);result.scrollIntoView({behavior:"smooth",block:"center"});
+    });
+  }
+  var rbtn=document.getElementById("resetBtn");
+  if(rbtn)rbtn.addEventListener("click",function(){document.querySelectorAll(".opt").forEach(function(o){o.classList.remove("correct","wrong");});if(result)result.classList.remove("show");});
+}
+
+function bindLesson(id){
+  var l=findLesson(id);
+  if(!l)return;
+  for(var j=0;j<l.tasks.length;j++){
+    (function(t){
+      var btn=document.querySelector('[data-check="'+t.id+'"]');
+      if(btn)btn.addEventListener("click",function(){checkTask(t);});
+      var saved=state.answers[t.id];
+      if(saved&&saved.ok)showFeedback(t,true,true);
+      else if(saved&&t.type==="choice"&&saved.val!=null){
+        var inp=document.querySelector('input[name="'+t.id+'"][value="'+saved.val+'"]');
+        if(inp)inp.checked=true;
+      }
+      var input=document.querySelector('[data-task="'+t.id+'"] input[type="text"]');
+      if(input&&saved)input.style.borderColor=saved.ok?"var(--ok)":"var(--err)";
+    })(l.tasks[j]);
+  }
+  updateLessonDone(id);
+  document.querySelectorAll("[data-lesson-nav]").forEach(function(b){
+    b.addEventListener("click",function(){navigate("lesson",b.getAttribute("data-lesson-nav"));});
+  });
+}
+
+function bindProgress(){
+  var btn=document.getElementById("resetProgress");
+  if(btn)btn.addEventListener("click",function(){
+    if(confirm("Сбросить весь прогресс?")){
+      localStorage.removeItem(LS.test);localStorage.removeItem(LS.completed);localStorage.removeItem(LS.answers);
+      state={test:null,completed:{},answers:{}};render();
+    }
+  });
+}
+
+function bindGoto(scope){
+  var root=scope||document;
+  root.querySelectorAll("[data-goto]").forEach(function(el){
+    el.addEventListener("click",function(){navigate(el.getAttribute("data-goto"));});
+  });
+}
+
+function bindLessonCards(){
+  document.querySelectorAll("[data-lesson]").forEach(function(card){
+    card.addEventListener("click",function(){navigate("lesson",card.getAttribute("data-lesson"));});
+  });
+}
+
+/* ============ РОУТЕР ============ */
+
+var currentRoute="home",currentParam=null;
+function navigate(route,param){currentRoute=route;currentParam=param||null;render();}
+
+function render(){
+  var app=document.getElementById("app");
+  var errBox=document.getElementById("error");
+  errBox.classList.remove("show");
+  try{
+    if(currentRoute==="home")app.innerHTML=viewHome();
+    else if(currentRoute==="test"){app.innerHTML=viewTest();bindTest();}
+    else if(currentRoute==="lessons"){app.innerHTML=viewLessons();bindLessonCards();}
+    else if(currentRoute==="lesson"){var id=parseInt(currentParam,10);app.innerHTML=viewLesson(id);bindLesson(id);}
+    else if(currentRoute==="progress"){app.innerHTML=viewProgress();bindProgress();}
+    else if(currentRoute==="admin"){app.innerHTML=viewAdmin();bindAdmin();}
+    else if(currentRoute==="lesson-edit"){app.innerHTML=viewLessonEditor();bindLessonEditor();}
+    else app.innerHTML=viewHome();
+    bindGoto(app);
+  }catch(e){
+    errBox.textContent="Ошибка: "+e.message+"\n"+(e.stack||"");
+    errBox.classList.add("show");
+    if(window.console)console.error(e);
+  }
+  var navBtns=document.querySelectorAll("[data-nav]");
+  for(var i=0;i<navBtns.length;i++){
+    var r=navBtns[i].getAttribute("data-nav");
+    var active=(r===currentRoute)||(r==="lessons"&&currentRoute==="lesson")||(r==="admin"&&currentRoute==="lesson-edit");
+    navBtns[i].classList.toggle("active",active);
+  }
+  window.scrollTo(0,0);
+}
+
+/* ============ ТЕМА ============ */
+
+function initTheme(){
+  var btn=document.getElementById("themeBtn");
+  var saved="light";
+  try{saved=localStorage.getItem("theme")||"light";}catch(e){}
+  document.documentElement.setAttribute("data-theme",saved);
+  btn.textContent=saved==="dark"?"Светлая":"Тёмная";
+  btn.addEventListener("click",function(){
+    var cur=document.documentElement.getAttribute("data-theme");
+    var next=cur==="dark"?"light":"dark";
+    document.documentElement.setAttribute("data-theme",next);
+    try{localStorage.setItem("theme",next);}catch(e){}
+    btn.textContent=next==="dark"?"Светлая":"Тёмная";
+    var meta=document.querySelector('meta[name="theme-color"]');
+    if(meta)meta.setAttribute("content",next==="dark"?"#0d0d0d":"#f6f5f1");
+  });
+  var meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute("content",saved==="dark"?"#0d0d0d":"#f6f5f1");
+}
+
+initTheme();
+document.querySelectorAll("[data-nav]").forEach(function(btn){
+  btn.addEventListener("click",function(){navigate(btn.getAttribute("data-nav"));});
+});
+render();
+</script>
+</body>
+</html>

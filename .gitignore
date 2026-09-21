@@ -1,0 +1,14 @@
+# служебное
+tmp/
+tools/dump/
+tools/patch/*.txt
+tools/last-check.txt
+*.log
+
+# системное
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ключи: сюда попадает только рабочий ключ DeepSeek, если ты его вставишь
+config/deepseek-key.local.js

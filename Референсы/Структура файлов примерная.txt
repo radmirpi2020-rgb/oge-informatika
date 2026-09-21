@@ -1,0 +1,85 @@
+oge-informatics/
+├── index.html
+├── README.md
+├── .gitignore
+│
+├── assets/
+│   ├── fonts/
+│   ├── icons/
+│   └── images/
+│
+├── styles/
+│   ├── base.css
+│   ├── layout.css
+│   ├── components.css
+│   ├── pages.css
+│   ├── editor.css
+│   ├── blocks.css
+│   └── themes.css
+│
+├── scripts/
+│   ├── app.js
+│   ├── router.js
+│   ├── state.js
+│   ├── storage.js
+│   ├── theme.js
+│   ├── markdown.js
+│   │
+│   ├── pages/
+│   │   ├── home.js
+│   │   ├── test.js
+│   │   ├── lessons.js
+│   │   ├── lesson.js
+│   │   ├── progress.js
+│   │   └── admin.js
+│   │
+│   ├── admin/
+│   │   ├── dashboard.js
+│   │   ├── lesson-editor.js
+│   │   ├── task-editor.js
+│   │   ├── practical-editor.js
+│   │   └── toolbar.js
+│   │
+│   ├── practices/
+│   │   ├── sandbox.js
+│   │   ├── code-editor.js
+│   │   ├── code-runner.js
+│   │   ├── block-editor.js
+│   │   ├── robot.js
+│   │   ├── grid.js
+│   │   └── checker.js
+│   │
+│   ├── python/
+│   │   ├── interpreter.js
+│   │   ├── parser.js
+│   │   └── builtins.js
+│   │
+│   └── utils/
+│       ├── dom.js
+│       ├── validate.js
+│       ├── export.js
+│       └── import.js
+│
+├── data/
+│   ├── lessons/
+│   │   ├── module-01-systems.js
+│   │   ├── module-02-logic.js
+│   │   ├── module-03-algorithms.js
+│   │   ├── module-04-coding.js
+│   │   ├── module-05-files.js
+│   │   ├── module-06-tables.js
+│   │   ├── module-07-databases.js
+│   │   ├── module-08-graphs.js
+│   │   ├── module-09-transmission.js
+│   │   ├── module-10-python-basics.js
+│   │   ├── module-11-python-advanced.js
+│   │   ├── module-12-olympiad.js
+│   │   └── module-13-projects.js
+│   │
+│   ├── test-questions.js
+│   └── index.js
+│
+└── docs/
+    ├── architecture.md
+    ├── content-format.md
+    └── practice-types.md

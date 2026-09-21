@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f6f5f1">
+<meta name="description" content="ОГЭ по информатике: 300 уроков, интерактивные практики и нейронка-провожатый">
+<link rel="icon" href="assets/images/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<title>ОГЭ·Информатика — репетитор, который ведёт за руку</title>
+
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/pages.css">
+<link rel="stylesheet" href="styles/ai.css">
+<link rel="stylesheet" href="styles/themes.css">
+</head>
+<body>
+<div class="wrap">
+  <div id="pageHeader"></div>
+  <div class="layout">
+    <div id="pageAside"></div>
+    <main>
+      <div id="error"></div>
+      <div id="pageBody"></div>
+    </main>
+  </div>
+  <footer>
+    <div>ОГЭ·Информатика · <span id="footNote">всё работает в браузере</span></div>
+    <div><a href="#/media">Медиа</a> · <a href="#/plans">Тарифы</a> · <a href="#/tutor">Провожатый</a> · <a href="#/admin">Админка</a></div>
+  </footer>
+</div>
+<div id="panels"></div>
+<div id="root"></div>
+
+<!-- 1. ядро -->
+<script src="scripts/core/app.js"></script>
+<script src="scripts/core/storage.js"></script>
+<script src="scripts/core/lessons-merge.js"></script>
+<script src="scripts/core/state.js"></script>
+<script src="scripts/core/assets.js"></script>
+
+<!-- 2. данные -->
+<script src="data/plans.js"></script>
+<script src="config/deepseek-key.js"></script>
+<script src="data/lessons-bundle.js"></script>
+<script src="data/test-questions.js"></script>
+
+<!-- 3. движки практик -->
+<script src="scripts/practice/python-lite.js"></script>
+<script src="scripts/practice/sandbox.js"></script>
+<script src="scripts/practice/code.js"></script>
+<script src="scripts/practice/robot.js"></script>
+<script src="scripts/practice/sql.js"></script>
+<script src="scripts/practice/table.js"></script>
+<script src="scripts/practice/graph.js"></script>
+
+<!-- 4. нейронка -->
+<script src="scripts/ai/ai.js"></script>
+<script src="scripts/ai/ai-panel.js"></script>
+
+<!-- 5. страницы -->
+<script src="scripts/core/router.js"></script>
+<script src="scripts/pages/home.js"></script>
+<script src="scripts/pages/test.js"></script>
+<script src="scripts/pages/lessons.js"></script>
+<script src="scripts/pages/lesson.js"></script>
+<script src="scripts/pages/progress.js"></script>
+<script src="scripts/pages/tutor.js"></script>
+<script src="scripts/pages/plans.js"></script>
+<script src="scripts/pages/media.js"></script>
+<script src="scripts/pages/admin.js"></script>
+<script src="scripts/pages/notfound.js"></script>
+
+<!-- 6. старт -->
+<script src="scripts/core/boot.js"></script>
+</body>
+</html>

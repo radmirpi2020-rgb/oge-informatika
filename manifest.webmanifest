@@ -1,0 +1,13 @@
+{
+  "name": "ОГЭ·Информатика — репетитор, который ведёт за руку",
+  "short_name": "ОГЭ·Информатика",
+  "description": "300 уроков, интерактивные практики и нейронка-провожатый для подготовки к ОГЭ по информатике",
+  "lang": "ru",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f6f5f1",
+  "theme_color": "#ff4d00",
+  "icons": [
+    { "src": "assets/images/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

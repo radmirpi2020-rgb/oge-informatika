@@ -1,0 +1,12 @@
+/* themes.css — тема и печать. Переключение через data-theme на <html>. */
+[data-theme="dark"] .grid-svg .grid-r{stroke:#262626}
+[data-theme="dark"] .ai-fab{background:var(--accent);border-color:var(--accent);color:#fff}
+[data-theme="dark"] .btn:active{color:#fff}
+[data-theme="dark"] ::selection{background:var(--accent);color:#111}
+
+@media print{
+  aside,.ai-fab,.ai-panel,.toggle,footer,.md-toolbar{display:none!important}
+  .wrap{border:none;max-width:none}
+  body{background:#fff;color:#000}
+  .card,.task,.practical{border-color:#999}
+}
