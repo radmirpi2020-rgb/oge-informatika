@@ -302,8 +302,21 @@ guard("лимиты и тарифы", () => {
 });
 
 guard("локальный ответ без ключа", () => {
+  /* В config/deepseek-key.js может лежать рабочий ключ: тогда ветка «без ключа» не выполняется,
+     и тест падал бы из-за настроек, а не из-за кода. Поэтому состояние ключа убираем явно. */
+  const savedKey = App.storage.get("oge_ai_key", null);
+  const savedWin = global.DEEPSEEK_API_KEY;
+  App.storage.del("oge_ai_key");
+  try { delete global.DEEPSEEK_API_KEY; } catch (e) { global.DEEPSEEK_API_KEY = ""; }
+
+  if (App.ai.configured()) errors.push("ключ всё ещё виден — тест без ключа невозможен");
   const r = App.ai.ask("объясни тему", { mode: "eco" });
   if (!r.local || !r.text) errors.push("без ключа не работает локальный ответ");
+  else if (r.text.length < 40) errors.push("локальный ответ слишком короткий: " + r.text.length + " символов");
+
+  /* возвращаем всё как было */
+  if (savedWin !== undefined) { try { global.DEEPSEEK_API_KEY = savedWin; } catch (e) {} }
+  if (savedKey !== null && savedKey !== undefined) App.storage.set("oge_ai_key", savedKey);
 });
 
 /* ---------- итог ---------- */

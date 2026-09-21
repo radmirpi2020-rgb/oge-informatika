@@ -1,0 +1,183 @@
+{
+  "generatedAt": "2026-09-21T15:53:20.225Z",
+  "examYear": 2026,
+  "maxPrimary": 21,
+  "totalBallFromPlan": 21,
+  "partMinutes": {
+    "part1": 34,
+    "part2": 141
+  },
+  "modules": [
+    {
+      "file": "module-01-diagnostic.js",
+      "id": "d0",
+      "exam": "все",
+      "ball": 21,
+      "hours": 3,
+      "lessons": 4,
+      "gaps": 2
+    },
+    {
+      "file": "module-02-task-01-text-volume.js",
+      "id": "d1",
+      "exam": "1",
+      "ball": 1,
+      "hours": 3,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-03-task-02-decoding.js",
+      "id": "d2",
+      "exam": "2",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-04-task-03-logic.js",
+      "id": "d3",
+      "exam": "3",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-05-task-04-graph-path.js",
+      "id": "d4",
+      "exam": "4",
+      "ball": 1,
+      "hours": 5,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-06-task-05-executor.js",
+      "id": "d5",
+      "exam": "5",
+      "ball": 1,
+      "hours": 5,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-07-task-06-trace-program.js",
+      "id": "d6",
+      "exam": "6",
+      "ball": 1,
+      "hours": 5,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-08-task-07-web-address.js",
+      "id": "d7",
+      "exam": "7",
+      "ball": 1,
+      "hours": 3,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-09-task-08-search-queries.js",
+      "id": "d8",
+      "exam": "8",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-10-task-09-graph-paths.js",
+      "id": "d9",
+      "exam": "9",
+      "ball": 1,
+      "hours": 5,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-11-task-10-numeral-systems.js",
+      "id": "d10",
+      "exam": "10",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-12-task-11-file-search.js",
+      "id": "d11",
+      "exam": "11",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-13-task-12-file-count.js",
+      "id": "d12",
+      "exam": "12",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 5,
+      "gaps": 2
+    },
+    {
+      "file": "module-14-task-13-presentation.js",
+      "id": "d13",
+      "exam": "13.1",
+      "ball": 2,
+      "hours": 5,
+      "lessons": 7,
+      "gaps": 3
+    },
+    {
+      "file": "module-15-task-14-text-document.js",
+      "id": "d14",
+      "exam": "13.2",
+      "ball": 2,
+      "hours": 6,
+      "lessons": 7,
+      "gaps": 3
+    },
+    {
+      "file": "module-16-task-15-spreadsheet.js",
+      "id": "d15",
+      "exam": "14",
+      "ball": 3,
+      "hours": 10,
+      "lessons": 9,
+      "gaps": 3
+    },
+    {
+      "file": "module-17-task-16-robot.js",
+      "id": "d16",
+      "exam": "15",
+      "ball": 2,
+      "hours": 8,
+      "lessons": 8,
+      "gaps": 3
+    },
+    {
+      "file": "module-18-task-17-python.js",
+      "id": "d17",
+      "exam": "16",
+      "ball": 2,
+      "hours": 9,
+      "lessons": 8,
+      "gaps": 3
+    },
+    {
+      "file": "module-19-simulations.js",
+      "id": "d18",
+      "exam": "13–16",
+      "ball": 21,
+      "hours": 8,
+      "lessons": 6,
+      "gaps": 3
+    }
+  ]
+}

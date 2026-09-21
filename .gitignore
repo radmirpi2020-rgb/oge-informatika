@@ -10,5 +10,14 @@ Thumbs.db
 desktop.ini
 .DS_Store
 
-# ключи: сюда попадает только рабочий ключ DeepSeek, если ты его вставишь
+# ключи: рабочий ключ DeepSeek живёт ТОЛЬКО здесь, в репозиторий не попадает.
+# config/deepseek-key.js — шаблон, он коммитится и ключа содержать не должен.
 config/deepseek-key.local.js
+
+# исследование: скачанные архивы ФИПИ, распакованные документы и выгрузки.
+# Тяжёлые файлы в репозиторий не идут, скрипт разбора PDF остаётся.
+_research/*
+!_research/extract_pdf.py
+_research/fipi/*.zip
+_research/fipi/o*/
+_research_fipi/

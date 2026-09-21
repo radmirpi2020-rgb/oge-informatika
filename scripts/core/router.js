@@ -36,7 +36,7 @@
     var plan = ST.planDef();
     var info = App.usage.info();
     return '<header>' +
-      '<div class="logo" role="link" tabindex="0" data-nav="home">ОГЭ<span>·</span>Информатика</div>' +
+      '<div class="logo" role="link" tabindex="0" data-nav="home">Информатика<span>·</span>5–9 класс</div>' +
       '<div class="header-tools">' +
         '<button class="toggle" id="ringBtn" title="Лимит нейронки на сегодня">' + App.aiRing({ withText: true }) + '</button>' +
         '<button class="toggle" id="aiBtn" title="Открыть провожатого">AI</button>' +
