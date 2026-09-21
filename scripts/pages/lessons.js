@@ -83,20 +83,41 @@
       if (!list.length) {
         html += '<div class="alert soft">Ничего не найдено. Сбрось фильтры или измени запрос.</div>';
       } else {
-        var currentModule = null;
-        var shown = 0;
+        /* Разделы свёрнуты, как папки: открыт тот, в котором ученик работал последним,
+           а если он ещё ничего не делал — первый. Стрелка раскрывает и закрывает. */
+        var isFiltered = f.module !== "all" || f.kind !== "all" || !!f.q;
+        var remembered = ST.lastModule(courseId);
+        var openNow = ST.openModules();
+        var groups = [];
+        var index = {};
         list.forEach(function (l) {
           var m = l.module || "Прочее";
-          if (m !== currentModule && f.module === "all") {
-            currentModule = m;
-            var byMod = ST.summary(App.course.current()).byModule[m] || { total: 0, finished: 0 };
-            html += '<div class="module-head"><h3>' + App.util.esc(m) + "</h3>" +
-              '<span class="muted">' + byMod.finished + " из " + byMod.total + " пройдено</span></div>";
-          }
-          html += card(l, shown++);
+          if (!index[m]) { index[m] = { name: m, items: [] }; groups.push(index[m]); }
+          index[m].items.push(l);
         });
-        if (shown > 1) {
-          html += '<div class="tiny muted" style="margin-top:12px">Показано ' + shown + " из " + all.length + ".</div>";
+
+        groups.forEach(function (g, i) {
+          var byMod = (ST.summary(courseId).byModule || {})[g.name] || { total: g.items.length, finished: 0 };
+          var open = isFiltered
+            ? true
+            : (g.name === remembered) || (index[g.name] && openNow.indexOf(g.name) !== -1) || (!remembered && i === 0);
+          var done = byMod.finished || 0;
+          html += '<section class="module' + (open ? " open" : "") + '" data-module="' + App.util.esc(g.name) + '">' +
+            '<button class="module-head" type="button" aria-expanded="' + (open ? "true" : "false") + '">' +
+              '<span class="arrow" aria-hidden="true">▸</span>' +
+              '<span class="module-title">' + App.util.esc(g.name) + "</span>" +
+              '<span class="module-meta">' + g.items.length + " " + App.util.plural(g.items.length, "элемент", "элемента", "элементов") +
+                " · " + done + " из " + (byMod.total || g.items.length) + " пройдено</span>" +
+            "</button>" +
+            '<div class="module-body">' +
+              g.items.map(function (l) { return card(l); }).join("") +
+            "</div>" +
+          "</section>";
+        });
+
+        if (list.length > 1) {
+          html += '<div class="tiny muted" style="margin-top:12px">Показано ' + list.length + " из " + all.length +
+            ". Разделы открываются стрелкой: сейчас раскрыт тот, где ты работал последним.</div>";
         }
       }
       return html;
@@ -122,6 +143,27 @@
           App.router.render();
         });
       });
+
+      /* стрелка у раздела: раскрыть или закрыть */
+      document.querySelectorAll(".module > .module-head").forEach(function (head) {
+        head.addEventListener("click", function () {
+          var box = head.parentNode;
+          var name = box.getAttribute("data-module") || "";
+          var willOpen = !box.classList.contains("open");
+          box.classList.toggle("open", willOpen);
+          head.setAttribute("aria-expanded", willOpen ? "true" : "false");
+          /* запоминаем выбор: открытые разделы помним в сессии, последний — в браузере */
+          var open = ST.openModules().filter(function (m) { return m !== name; });
+          if (willOpen) {
+            open.push(name);
+            ST.rememberModule(App.course.current(), name);
+          } else if (ST.lastModule(App.course.current()) === name) {
+            ST.forgetLastModule(App.course.current());
+          }
+          ST.setOpenModules(open);
+        });
+      });
+
       document.querySelectorAll("[data-lesson]").forEach(function (el) {
         el.addEventListener("click", function () { App.router.go("lesson", el.getAttribute("data-lesson")); });
       });

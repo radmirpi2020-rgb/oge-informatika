@@ -1,4 +1,4 @@
-/* tools/render-test.js — запускает сайт «как в браузере»: грузит скрипты и boot.js,
+﻿/* tools/render-test.js — запускает сайт «как в браузере»: грузит скрипты и boot.js,
    затем рисует каждую страницу и проверяет, что в DOM появилась настоящая разметка.
    Ловит именно те ошибки, которые видны только при отрисовке (например, забытый window.ST).
    Запуск: node tools/render-test.js */
@@ -263,6 +263,66 @@ courseCheck("вход и выход переключают панель акка
   if (out.indexOf("Сохранить прогресс в аккаунт") === -1) return "нет панели вошедшего ученика";
   App.auth.logout();
   if (App.auth.logged()) return "токен не убран после выхода";
+  return null;
+});
+
+/* ---------- аккордеон разделов в списке уроков ---------- */
+console.log("");
+console.log("Проверка разделов-аккордеона:");
+
+courseCheck("при входе открыт только первый раздел", () => {
+  App.storage.del("oge_last_module_base");
+  App.storage.del("oge_last_module_oge");
+  App.storage.del("oge_lastLesson");
+  try { sessionStorage.removeItem("oge_open_modules"); } catch (e) {}
+  const out = renderPage("#/lessons").body;
+  const openBlocks = out.split('class="module open"').length - 1;
+  const allBlocks = (out.match(/class="module"/g) || []).length + openBlocks;
+  if (allBlocks < 5) return "разделов мало: " + allBlocks;
+  if (openBlocks !== 1) return "открытых разделов " + openBlocks + ", а должен быть один";
+  const firstOpen = out.indexOf('class="module open"') < out.indexOf('class="module"');
+  if (!firstOpen) return "открыт не первый раздел";
+  return null;
+});
+
+courseCheck("стрелка есть в каждом разделе", () => {
+  const out = renderPage("#/lessons").body;
+  const heads = (out.match(/class="module-head"/g) || []).length;
+  const arrows = (out.match(/class="arrow"/g) || []).length;
+  if (heads !== arrows) return "заголовков " + heads + ", стрелок " + arrows;
+  if (out.indexOf('aria-expanded="true"') === -1) return "нет признака раскрытого раздела";
+  return null;
+});
+
+courseCheck("раздел запоминается и открывается при возврате", () => {
+  /* имитируем: ученик зашёл в урок из раздела 3 — раздел запомнился */
+  App.storage.set("oge_last_module_base", "Файловая система");
+  const out = renderPage("#/lessons").body;
+  const openPart = out.slice(out.indexOf('class="module open"'));
+  const openName = (openPart.match(/data-module="([^"]+)"/) || [])[1];
+  if (openName !== "Файловая система") return "открылся раздел «" + openName + "» вместо запомненного";
+  return null;
+});
+
+courseCheck("закрытие последнего раздела возвращает первый", () => {
+  App.storage.set("oge_last_module_base", "Файловая система");
+  ST.forgetLastModule("base");
+  if (ST.lastModule("base") !== "") return "память о разделе не сбросилась";
+  const out = renderPage("#/lessons").body;
+  const openPart = out.slice(out.indexOf('class="module open"'));
+  const openName = (openPart.match(/data-module="([^"]+)"/) || [])[1];
+  const firstModule = (out.match(/data-module="([^"]+)"/) || [])[1];
+  if (openName !== firstModule) return "открылся «" + openName + "» вместо первого «" + firstModule + "»";
+  return null;
+});
+
+courseCheck("модули курса ОГЭ тоже сворачиваются", () => {
+  App.course.set("oge");
+  App.storage.del("oge_last_module_oge");
+  const out = renderPage("#/lessons").body;
+  const openBlocks = out.split('class="module open"').length - 1;
+  if (openBlocks !== 1) return "в курсе ОГЭ открытых разделов: " + openBlocks;
+  App.course.set("base");
   return null;
 });
 

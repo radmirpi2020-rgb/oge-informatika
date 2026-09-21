@@ -32,6 +32,8 @@
 
       App.storage.set(App.storage.KEYS.lastLesson, l.id);
       var courseId = App.course.ofLesson(l);
+      /* запоминаем раздел: при возврате в список уроков он будет раскрыт */
+      ST.rememberModule(courseId, l.module);
       var all = ST.allLessons(courseId);
       var idx = ST.lessonIndex(l.id, courseId);
       var prev = idx > 0 ? all[idx - 1] : null;

@@ -90,6 +90,9 @@
     ST.saveCompleted();
     ST.touchStreak();
     ST.pushActivity(id);
+    /* запоминаем раздел: при следующем входе в список уроков он будет раскрыт */
+    var l = ST.lesson(id);
+    if (l) ST.rememberModule(l.course || "base", l.module);
   };
 
   /* ---------- активность и серия дней ---------- */
@@ -102,6 +105,44 @@
   };
 
   ST.activity = function () { return App.storage.get("oge_activity", []) || []; };
+
+  /* ---------- последний раздел (модуль), в котором работал ученик ----------
+
+     Нужен для списка уроков: разделы там свёрнуты, и открывается тот,
+     в котором ученик работал последним, а не всегда первый. */
+
+  function lastModuleKey(course) { return "oge_last_module_" + (course || "base"); }
+
+  ST.lastModule = function (course) {
+    return App.storage.get(lastModuleKey(course), "") || "";
+  };
+
+  ST.rememberModule = function (course, moduleName) {
+    if (!moduleName) return;
+    App.storage.set(lastModuleKey(course), String(moduleName));
+    /* в сессии держим все открытые разделы — чтобы ученик мог раскрыть несколько */
+    var open = ST.openModules();
+    if (open.indexOf(String(moduleName)) === -1) open.push(String(moduleName));
+    ST.setOpenModules(open);
+  };
+
+  /** открытые вручную разделы текущей сессии */
+  ST.openModules = function () {
+    try { return JSON.parse(sessionStorage.getItem("oge_open_modules") || "[]") || []; }
+    catch (e) { return []; }
+  };
+
+  ST.setOpenModules = function (list) {
+    try { sessionStorage.setItem("oge_open_modules", JSON.stringify((list || []).slice(-20))); }
+    catch (e) { /* приватный режим — просто не запоминаем */ }
+  };
+
+  /** забыть последний раздел: тогда список снова откроет первый */
+  ST.forgetLastModule = function (course) {
+    App.storage.del(lastModuleKey(course));
+  };
+
+  ST.forgetModules = function () { ST.setOpenModules([]); };
 
   ST.touchStreak = function () {
     var today = App.util.today();
