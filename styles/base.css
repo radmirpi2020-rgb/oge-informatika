@@ -1,0 +1,41 @@
+/* base.css — переменные, сброс, типографика. Разметка прототипа сохранена. */
+:root{
+  --bg:#f6f5f1;--fg:#111;--muted:#6b6b6b;--line:#111;--line-soft:#d8d5cd;
+  --accent:#ff4d00;--card:#fff;--ok:#16a34a;--err:#dc2626;
+  --nav-h:0px;--ring:22px;
+}
+[data-theme="dark"]{
+  --bg:#0d0d0d;--fg:#ececec;--muted:#8a8a8a;--line:#2e2e2e;--line-soft:#242424;
+  --accent:#ff6a2b;--card:#141414;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--fg);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  line-height:1.55;transition:background .25s,color .25s;overflow-x:hidden;
+}
+h1{font-size:clamp(24px,6vw,38px);line-height:1.1;letter-spacing:-.03em;margin-bottom:14px}
+h1 em{font-style:normal;color:var(--accent)}
+h2{font-size:clamp(20px,5vw,22px);letter-spacing:-.02em;margin-bottom:10px}
+h3{font-size:16px;margin:20px 0 10px}
+h4{font-size:14px}
+p{margin-bottom:12px;font-size:15px}
+a{color:var(--fg)}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:12px}
+.lead{font-size:15px;color:var(--muted);max-width:660px;margin-bottom:20px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.muted{color:var(--muted)}
+.tiny{font-size:12px}
+.hidden{display:none!important}
+code{font-family:ui-monospace,monospace;background:var(--bg);border:1px solid var(--line-soft);padding:1px 6px;font-size:13px;word-break:break-word}
+.ex{border:1px dashed var(--line);padding:12px 14px;font-family:ui-monospace,monospace;font-size:13px;margin:12px 0;white-space:pre-wrap;line-height:1.6;background:var(--bg);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.hack{border-left:3px solid var(--accent);padding:10px 14px;margin:14px 0;background:var(--card);font-size:14px}
+.hack b{color:var(--accent)}
+.warn{border-left:3px solid var(--err);padding:10px 14px;margin:14px 0;background:var(--card);font-size:14px}
+.warn b{color:var(--err)}
+#error{display:none;padding:16px;border:2px solid var(--err);background:rgba(220,38,38,.1);color:var(--err);font-family:ui-monospace,monospace;font-size:12px;margin-bottom:20px;white-space:pre-wrap;word-break:break-word}
+#error.show{display:block}
+::selection{background:var(--accent);color:#fff}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line-soft)}

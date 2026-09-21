@@ -1,0 +1,13 @@
+{
+  "name": "Информатика 5–9 класс — репетитор, который ведёт за руку",
+  "short_name": "Информатика 5–9",
+  "description": "Курс информатики 5–9 класс: 300 уроков, интерактивные практики и нейронка-провожатый. Рядом собирается второй курс — подготовка к ОГЭ",
+  "lang": "ru",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f6f5f1",
+  "theme_color": "#ff4d00",
+  "icons": [
+    { "src": "assets/images/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

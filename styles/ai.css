@@ -1,0 +1,69 @@
+/* ai.css — нейронка: кнопка, панель чата, кружок лимита, страница тарифов */
+.ai-fab{position:fixed;right:18px;bottom:calc(18px + var(--nav-h));z-index:60;display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--fg);color:var(--bg);padding:10px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:48px}
+.ai-fab:active{background:var(--accent);border-color:var(--accent);color:#fff}
+.ai-fab .dot{width:8px;height:8px;background:var(--ok);border-radius:50%}
+.ai-fab .dot.off{background:var(--err)}
+
+.limit-ring{display:block;transform:rotate(-90deg)}
+.limit-ring circle{fill:none;stroke-width:3}
+.limit-ring .trk{stroke:var(--line-soft)}
+.limit-ring .bar{stroke:var(--accent);transition:stroke-dashoffset .4s}
+.limit-ring .bar.low{stroke:var(--ok)}
+.limit-ring .bar.warn{stroke:#eab308}
+.limit-ring .bar.full{stroke:var(--err)}
+.ring-wrap{position:relative;width:var(--ring);height:var(--ring);flex-shrink:0}
+.ring-wrap .ring-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-size:9px;font-weight:700}
+
+/* тариф без нейронки: вместо режимов трат — объяснение и кнопка на тарифы */
+.ai-locked{padding:12px 14px;border:1px dashed var(--line);background:var(--card);font-size:13px}
+.ai-locked b{display:block;margin-bottom:2px}
+
+.ai-panel{position:fixed;right:16px;bottom:calc(16px + var(--nav-h));width:min(460px,calc(100vw - 32px));height:min(660px,calc(100vh - 120px));background:var(--bg);border:1px solid var(--line);z-index:70;display:none;flex-direction:column;box-shadow:0 18px 40px rgba(0,0,0,.18)}
+.ai-panel.show{display:flex}
+.ai-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--card)}
+.ai-head .t{flex:1;min-width:0}
+.ai-head .t b{display:block;font-size:13px}
+.ai-head .t span{font-size:11px;color:var(--muted)}
+.ai-head button{border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer;font:inherit;font-size:12px;padding:4px 8px;min-height:34px}
+.ai-modes{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line-soft);overflow-x:auto}
+.ai-mode{border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:11px;padding:4px 9px;cursor:pointer;white-space:nowrap;min-height:32px}
+.ai-mode.sel{border-color:var(--accent);color:var(--accent);background:var(--card)}
+.ai-mode:disabled{opacity:.4;cursor:not-allowed}
+.ai-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:90%;padding:10px 12px;font-size:14px;border:1px solid var(--line);background:var(--card);white-space:normal;word-break:break-word}
+.ai-msg.user{align-self:flex-end;background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.ai-msg.bot{align-self:flex-start}
+.ai-msg.sys{align-self:center;font-size:12px;color:var(--muted);border:none;background:transparent;text-align:center}
+.ai-msg pre{margin:8px 0;padding:8px 10px;background:var(--bg);border:1px solid var(--line-soft);overflow-x:auto;font-size:12px;font-family:ui-monospace,monospace}
+.ai-msg.user pre{background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.25);color:#fff}
+.ai-msg code{background:transparent;border:none;padding:0}
+.ai-msg .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.ai-msg .chips button{border:1px solid var(--line);background:transparent;color:inherit;font:inherit;font-size:11px;padding:3px 8px;cursor:pointer}
+.ai-foot{border-top:1px solid var(--line);padding:10px 12px;display:flex;gap:8px;align-items:flex-end;background:var(--card)}
+.ai-foot textarea{flex:1;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;font-size:15px;padding:10px 12px;resize:none;min-height:46px;max-height:120px;outline:none}
+.ai-foot textarea:focus{border-color:var(--accent)}
+.ai-foot .send{border:1px solid var(--line);background:var(--fg);color:var(--bg);font:inherit;font-size:13px;font-weight:600;padding:0 16px;cursor:pointer;min-height:46px}
+.ai-foot .send:disabled{opacity:.5;cursor:default}
+.ai-info{font-size:11px;color:var(--muted);padding:6px 12px;border-top:1px solid var(--line-soft)}
+.ai-suggest{display:flex;flex-direction:column;gap:6px;padding:0 14px 10px}
+.ai-suggest button{text-align:left;border:1px dashed var(--line);background:transparent;color:var(--muted);font:inherit;font-size:12px;padding:8px 10px;cursor:pointer}
+.ai-suggest button:active{border-color:var(--accent);color:var(--accent)}
+.typing{display:inline-flex;gap:3px;align-items:center}
+.typing i{width:5px;height:5px;background:var(--muted);border-radius:50%;animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.2s}
+.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.25}50%{opacity:1}}
+
+.tutor-grid{display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start}
+.tutor-box{border:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;height:min(72vh,720px)}
+.tutor-side{border:1px solid var(--line);background:var(--card);padding:16px}
+.usage-line{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.ai-starter{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
+.ai-starter button{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--fg);font:inherit;font-size:13px;padding:12px;cursor:pointer}
+.ai-starter button b{display:block;margin-bottom:4px;color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+
+@media (max-width:900px){
+  .tutor-grid{grid-template-columns:1fr}
+  .ai-panel{right:8px;left:8px;width:auto;height:min(78vh,640px);bottom:calc(8px + var(--nav-h))}
+  .ai-fab{right:12px;bottom:calc(12px + var(--nav-h))}
+}
