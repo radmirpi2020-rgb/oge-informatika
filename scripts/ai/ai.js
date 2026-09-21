@@ -23,7 +23,20 @@
     return "";
   };
   AI.configured = function () { return AI.key().length > 12; };
+
+  /** Прокси на сервере: ключ DeepSeek лежит в DEEPSEEK_API_KEY на сервере, а не в браузере.
+      Включается сам, как только в config/api.js указан адрес сервера — это безопасный режим,
+      потому что ключ тогда нельзя вытащить через F12. Требует входа в аккаунт. */
+  AI.proxyUrl = function () {
+    var base = (App.api && App.api.base) || String(window.SITE_API || "");
+    if (!base) return "";
+    return base.replace(/\/+$/, "") + "/api/ai";
+  };
+  AI.viaProxy = function () { return !!AI.proxyUrl(); };
+  AI.ready = function () { return AI.viaProxy() || AI.configured(); };
+
   AI.keySource = function () {
+    if (AI.viaProxy()) return "через сервер (ключ в браузере не хранится)";
     if (App.storage.get(App.storage.KEYS.aiKeyOverride, "")) return "сохранён в админке";
     if (AI.configured()) return "из config/deepseek-key.js";
     return "ключа нет";
@@ -107,12 +120,14 @@
     return lines.join("\n");
   };
 
-  /* ---------- запрос к DeepSeek ---------- */
+  /* ---------- запрос к DeepSeek: напрямую с ключом или через серверный прокси ---------- */
   AI.chat = function (messages, modeId, cb) {
-    var key = AI.key();
-    if (!key) return Promise.reject(new Error("NO_KEY"));
     var mode = App.AI_MODE(modeId);
-    var url = App.storage.get("oge_ai_endpoint", AI.CONFIG.endpoint) || AI.CONFIG.endpoint;
+    var proxy = AI.proxyUrl();
+    var key = proxy ? "" : AI.key();
+    if (!proxy && !key) return Promise.reject(new Error("NO_KEY"));
+
+    var url = proxy || App.storage.get("oge_ai_endpoint", AI.CONFIG.endpoint) || AI.CONFIG.endpoint;
 
     var payload = {
       model: App.storage.get("oge_ai_model", AI.CONFIG.model) || AI.CONFIG.model,
@@ -123,22 +138,34 @@
       stream_options: { include_usage: true }
     };
 
+    var headers = { "Content-Type": "application/json" };
+    if (proxy) {
+      /* через прокси ключ не нужен: сервер проверит вход ученика и сам подставит ключ */
+      var token = (App.auth && App.auth.token && App.auth.token()) || "";
+      if (token) headers.Authorization = "JWT " + token;
+    } else {
+      headers.Authorization = "Bearer " + key;
+    }
+
     var ctrl = new AbortController();
     var timer = setTimeout(function () { ctrl.abort(); }, AI.CONFIG.timeoutMs);
 
     return fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + key
-      },
+      headers: headers,
       body: JSON.stringify(payload),
       signal: ctrl.signal
     }).then(function (resp) {
       if (!resp.ok) {
         return resp.text().then(function (t) {
           var msg = "HTTP " + resp.status;
-          try { var j = JSON.parse(t); if (j.error && j.error.message) msg += ": " + j.error.message; } catch (e) {}
+          try {
+            var j = JSON.parse(t);
+            if (j.error && j.error.message) msg += ": " + j.error.message;
+            else if (j.error && typeof j.error === "string") msg += ": " + j.error;
+          } catch (e) {}
+          if (resp.status === 401) msg = "Провожатый работает только для вошедших: войди в аккаунт на странице #/account.";
+          if (resp.status === 429) msg = t.indexOf("error") !== -1 ? msg.replace(/^HTTP \d+: /, "") : "Лимит провожатого на сегодня исчерпан.";
           var err = new Error(msg);
           err.status = resp.status;
           throw err;
@@ -248,7 +275,14 @@
       return { error: e2 };
     }
 
-    if (!AI.configured()) {
+    if (AI.viaProxy() && !(App.auth && App.auth.logged())) {
+      var eAuth = new Error("Провожатый через сервер доступен вошедшим: открой #/account и войди. " +
+        "Так ключ остаётся на сервере и его нельзя вытащить из браузера.");
+      eAuth.code = "AUTH";
+      return Promise.resolve({ error: eAuth });
+    }
+
+    if (!AI.ready()) {
       return { local: true, text: localAnswer(question, ctx) };
     }
 

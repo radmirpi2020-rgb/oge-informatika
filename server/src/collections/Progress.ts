@@ -67,5 +67,15 @@ export const Progress: CollectionConfig = {
       type: 'text',
       admin: { description: 'Например: сайт, браузер Chrome, перенос из localStorage' },
     },
+    {
+      name: 'aiUsage',
+      label: 'Расход провожатого по дням',
+      type: 'json',
+      admin: {
+        description:
+          'Объект вида { "2026-09-21": { tokens: 41200, calls: 9 } }. Считает сервер (/api/ai), ' +
+          'чтобы ключ DeepSeek не лежал в браузере и лимит нельзя было обойти.',
+      },
+    },
   ],
 }

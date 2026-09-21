@@ -465,6 +465,18 @@ export interface Progress {
    * Например: сайт, браузер Chrome, перенос из localStorage
    */
   source?: string | null;
+  /**
+   * Объект вида { "2026-09-21": { tokens: 41200, calls: 9 } }. Считает сервер (/api/ai), чтобы ключ DeepSeek не лежал в браузере и лимит нельзя было обойти.
+   */
+  aiUsage?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -794,6 +806,7 @@ export interface ProgressSelect<T extends boolean = true> {
   streak?: T;
   minutes?: T;
   source?: T;
+  aiUsage?: T;
   updatedAt?: T;
   createdAt?: T;
 }
