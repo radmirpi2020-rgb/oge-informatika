@@ -1,0 +1,825 @@
+{
+  "generatedAt": "2026-09-21T18:19:53.303Z",
+  "rule": "Тяжёлое скачиваем и работаем в настоящей программе, лёгкое симулируем в сайте, но каждое задание части 2 делается вживую не меньше минимума из realMinimum.",
+  "simMaxMb": 5,
+  "totals": {
+    "lessons": 100,
+    "ball": 21,
+    "modules": 19,
+    "realRuns": 32,
+    "realTimed": 11,
+    "byMode": {
+      "sim": 76,
+      "download": 0,
+      "real": 19,
+      "exam": 5
+    }
+  },
+  "downloads": {
+    "tools": [
+      {
+        "key": "lo",
+        "kind": "tool",
+        "title": "LibreOffice (Writer, Calc, Impress)",
+        "mb": 357.5,
+        "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.0/win/x86_64/LibreOffice_26.8.0_Win_x86-64.msi",
+        "page": "https://ru.libreoffice.org/download/",
+        "why": "Форматы ответов на экзамене — .odt, .ods, .odp. Только этот пакет сохраняет их родными.",
+        "heavy": true
+      },
+      {
+        "key": "kumir",
+        "kind": "tool",
+        "title": "Кумир 2.1.0 rc11 (НИИСИ РАН)",
+        "mb": 34.8,
+        "url": "https://www.niisi.ru/kumir/kumir2-2.1.0-rc11-install.exe",
+        "page": "https://www.niisi.ru/kumir/dl.htm",
+        "why": "Среда исполнителя «Робот» — та, которую спецификация ОГЭ называет рекомендуемой.",
+        "heavy": true
+      },
+      {
+        "key": "python",
+        "kind": "tool",
+        "title": "Python 3.14.7 (Windows x64)",
+        "mb": 31.7,
+        "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-amd64.exe",
+        "page": "https://www.python.org/downloads/",
+        "why": "Задание 16 проверяется на тестах. Онлайн-компилятор на экзамене недоступен, нужен локальный запуск.",
+        "heavy": true
+      },
+      {
+        "key": "kumirOnline",
+        "kind": "tool",
+        "title": "Кумир онлайн (браузер)",
+        "mb": 0,
+        "url": "https://qumir.dev/",
+        "why": "Черновик: попробовать алгоритм без установки. Синтаксис и поведение Робота всё равно добиваются в настоящем Кумире.",
+        "heavy": false
+      }
+    ],
+    "data": [
+      {
+        "key": "fipi2026",
+        "kind": "data",
+        "title": "Архив КИМ ОГЭ-2026 с ФИПИ (целиком)",
+        "mb": 113.7,
+        "url": "https://doc.fipi.ru/oge/demoversii-specifikacii-kodifikatory/2026/inf_9_2026.zip",
+        "why": "Целиком качать не нужно: внутри демоверсия, спецификация, кодификатор и файлы заданий. Берём только нужное.",
+        "heavy": true,
+        "doNotDownloadWhole": true
+      },
+      {
+        "key": "task14ods",
+        "kind": "data",
+        "title": "Данные задания 14 (.ods из архива ФИПИ)",
+        "mb": 2,
+        "url": "https://doc.fipi.ru/oge/demoversii-specifikacii-kodifikatory/2026/inf_9_2026.zip",
+        "why": "Внутри архива: файл большого массива для задания 14. Распаковать и открыть в Calc.",
+        "heavy": false,
+        "fromArchive": "fipi2026"
+      },
+      {
+        "key": "demo13",
+        "kind": "data",
+        "title": "Заготовки задания 13 (каталог DEMO-13 и образец текста)",
+        "mb": 3,
+        "url": "https://doc.fipi.ru/oge/demoversii-specifikacii-kodifikatory/2026/inf_9_2026.zip",
+        "why": "Картинки, текст и образец документа — из того же архива. Нужны для 13.1 и 13.2.",
+        "heavy": false,
+        "fromArchive": "fipi2026"
+      },
+      {
+        "key": "fileTree",
+        "kind": "sample",
+        "title": "Учебный архив файлов для заданий 11 и 12",
+        "mb": 2,
+        "url": null,
+        "why": "Генерируется скриптом локально: дерево каталогов с разными расширениями и текстами. Качать чужой архив не нужно.",
+        "heavy": false,
+        "generated": true
+      },
+      {
+        "key": "bigTable",
+        "kind": "sample",
+        "title": "Большая таблица для задания 14 (сотни строк)",
+        "mb": 1,
+        "url": null,
+        "why": "Генерируется скриптом локально, чтобы можно было делать неограниченно много вариантов.",
+        "heavy": false,
+        "generated": true
+      }
+    ],
+    "totalMbTools": 424
+  },
+  "shortTrack": {
+    "weeks": 8,
+    "rule": "Практические модули 13–17 и симуляции d18 проходятся целиком (там все критерии, ловушки и живые прогоны). В части 1 из каждого модуля оставлены уроки экзаменационных типов задач; режется только глубина «для понимания». Живых прогонов столько же, сколько в полном курсе.",
+    "drop": "Отбрасывается глубина части 1: кодировки КОИ-8 и UTF-16, таблицы истинности, законы де Моргана, Дейкстра и перебор путей, порядок обхода графа, сортировка и фильтр.",
+    "totals": {
+      "lessons": 85,
+      "realRuns": 32,
+      "byMode": {
+        "sim": 61,
+        "download": 0,
+        "real": 19,
+        "exam": 5
+      }
+    },
+    "modules": [
+      {
+        "id": "d0",
+        "exam": "все",
+        "was": 4,
+        "now": 3,
+        "keptLessons": [
+          1,
+          2,
+          3
+        ],
+        "droppedLessons": [
+          "Разбор: какие задания провалены и почему"
+        ]
+      },
+      {
+        "id": "d1",
+        "exam": "1",
+        "was": 4,
+        "now": 3,
+        "keptLessons": [
+          1,
+          2,
+          4
+        ],
+        "droppedLessons": [
+          "Unicode 16 бит, ASCII 8 бит, КОИ-8, UTF-16"
+        ]
+      },
+      {
+        "id": "d2",
+        "exam": "2",
+        "was": 4,
+        "now": 3,
+        "keptLessons": [
+          1,
+          3,
+          4
+        ],
+        "droppedLessons": [
+          "Равномерный код: длина слова фиксирована"
+        ]
+      },
+      {
+        "id": "d3",
+        "exam": "3",
+        "was": 4,
+        "now": 3,
+        "keptLessons": [
+          1,
+          2,
+          3
+        ],
+        "droppedLessons": [
+          "Законы де Моргана как ускоритель решения"
+        ]
+      },
+      {
+        "id": "d4",
+        "exam": "4",
+        "was": 5,
+        "now": 3,
+        "keptLessons": [
+          2,
+          3,
+          5
+        ],
+        "droppedLessons": [
+          "Вершины, рёбра, вес ребра, матрица весов",
+          "Алгоритм Дейкстры: как считать без перебора"
+        ]
+      },
+      {
+        "id": "d5",
+        "exam": "5",
+        "was": 4,
+        "now": 3,
+        "keptLessons": [
+          1,
+          2,
+          3
+        ],
+        "droppedLessons": [
+          "Проверка: выполняем свой алгоритм по шагам"
+        ]
+      },
+      {
+        "id": "d6",
+        "exam": "6",
+        "was": 4,
+        "now": 3,
+        "keptLessons": [
+          1,
+          2,
+          3
+        ],
+        "droppedLessons": [
+          "Ловушки с отрицательными числами и строгими неравенствами"
+        ]
+      },
+      {
+        "id": "d7",
+        "exam": "7",
+        "was": 4,
+        "now": 3,
+        "keptLessons": [
+          1,
+          2,
+          4
+        ],
+        "droppedLessons": [
+          "Ловушки: фрагменты «https» и «https.», «.ru» и «ru»"
+        ]
+      },
+      {
+        "id": "d8",
+        "exam": "8",
+        "was": 4,
+        "now": 4,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "droppedLessons": []
+      },
+      {
+        "id": "d9",
+        "exam": "9",
+        "was": 5,
+        "now": 2,
+        "keptLessons": [
+          2,
+          5
+        ],
+        "droppedLessons": [
+          "Ориентированный граф, дуга, направление",
+          "Порядок обхода: от источника к стоку",
+          "Проверка перебором для маленьких графов"
+        ]
+      },
+      {
+        "id": "d10",
+        "exam": "10",
+        "was": 4,
+        "now": 4,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "droppedLessons": []
+      },
+      {
+        "id": "d11",
+        "exam": "11",
+        "was": 4,
+        "now": 3,
+        "keptLessons": [
+          1,
+          2,
+          4
+        ],
+        "droppedLessons": [
+          "Как не утонуть в сотнях файлов: сужаем область поиска"
+        ]
+      },
+      {
+        "id": "d12",
+        "exam": "12",
+        "was": 5,
+        "now": 4,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "droppedLessons": [
+          "Ошибка «посчитал вложенные папки» — почему лишние файлы попадают в ответ"
+        ]
+      },
+      {
+        "id": "d13",
+        "exam": "13.1",
+        "was": 7,
+        "now": 7,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "droppedLessons": []
+      },
+      {
+        "id": "d14",
+        "exam": "13.2",
+        "was": 7,
+        "now": 7,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "droppedLessons": []
+      },
+      {
+        "id": "d15",
+        "exam": "14",
+        "was": 9,
+        "now": 8,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "droppedLessons": [
+          "Сортировка и фильтр по диапазону"
+        ]
+      },
+      {
+        "id": "d16",
+        "exam": "15",
+        "was": 8,
+        "now": 8,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "droppedLessons": []
+      },
+      {
+        "id": "d17",
+        "exam": "16",
+        "was": 8,
+        "now": 8,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "droppedLessons": []
+      },
+      {
+        "id": "d18",
+        "exam": "13–16",
+        "was": 6,
+        "now": 6,
+        "keptLessons": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "droppedLessons": []
+      }
+    ]
+  },
+  "realMinimum": {
+    "d0": {
+      "runs": 1,
+      "timed": 1,
+      "what": "демоверсия ФИПИ на 150 минут в реальных условиях"
+    },
+    "d11": {
+      "runs": 2,
+      "timed": 0,
+      "what": "поиск по содержимому: файловый менеджер + текстовый редактор"
+    },
+    "d12": {
+      "runs": 2,
+      "timed": 0,
+      "what": "подсчёт по маске `*.htm` и `*?.htm` и суммарный объём"
+    },
+    "d13": {
+      "runs": 3,
+      "timed": 1,
+      "what": "три презентации в Impress, одна — на время 25 минут"
+    },
+    "d14": {
+      "runs": 3,
+      "timed": 1,
+      "what": "три документа в Writer, один — на время 25 минут"
+    },
+    "d15": {
+      "runs": 4,
+      "timed": 1,
+      "what": "четыре решения в Calc, два на большом массиве, одно на время 30 минут"
+    },
+    "d16": {
+      "runs": 10,
+      "timed": 2,
+      "what": "десять лабиринтов в настоящем Кумире, минимум три разных набора стен"
+    },
+    "d17": {
+      "runs": 3,
+      "timed": 1,
+      "what": "три программы, запущенные локальным Python, проверка на тестах условия"
+    },
+    "d18": {
+      "runs": 4,
+      "timed": 4,
+      "what": "четыре полных варианта на 150 минут, из них два — целиком на инструментах"
+    }
+  },
+  "simLimits": {
+    "d13": "Симуляция проверяет состав и оформление слайдов, но не сохраняет .odp и не показывает макеты Impress.",
+    "d14": "Симуляция проверяет текстовые требования и таблицу, но не абзацные отступы, интервалы и стили Writer.",
+    "d15": "Симуляция ловит логику формул и легенду диаграммы, но не формат .ods, не диалоги Calc и не формат числа с точностью.",
+    "d16": "Симуляция проверяет универсальность алгоритма на 5 наборах стен, но не синтаксис `нц пока … кц` и не отладчик Кумира.",
+    "d17": "Мини-Python проверяет логику, но ввод-вывод, падение на N = 1 и тесты условия надёжнее проверять настоящим Python."
+  },
+  "onlineInstead": [
+    {
+      "instead": "Кумир",
+      "online": "https://qumir.dev/",
+      "ok": "черновик алгоритма",
+      "notOk": "итоговый ответ задания 15"
+    },
+    {
+      "instead": "Python",
+      "online": "https://www.online-python.com/",
+      "ok": "быстрая проверка идеи",
+      "notOk": "сдача задания 16"
+    },
+    {
+      "instead": "LibreOffice Calc",
+      "online": "https://docs.google.com/spreadsheets/",
+      "ok": "посчитать числа",
+      "notOk": "диаграмма с легендой и файл .ods"
+    },
+    {
+      "instead": "LibreOffice Writer/Impress",
+      "online": null,
+      "ok": null,
+      "notOk": "любая замена: формат .odt и .odp онлайн не сохраняется"
+    }
+  ],
+  "modules": [
+    {
+      "id": "d0",
+      "exam": "все",
+      "ball": 21,
+      "hours": 3,
+      "lessons": 4,
+      "byMode": {
+        "sim": 3,
+        "download": 0,
+        "real": 0,
+        "exam": 1
+      },
+      "downloads": [
+        "fipi2026"
+      ],
+      "realRuns": 1,
+      "realTimed": 1
+    },
+    {
+      "id": "d1",
+      "exam": "1",
+      "ball": 1,
+      "hours": 3,
+      "lessons": 4,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d2",
+      "exam": "2",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 4,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d3",
+      "exam": "3",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 4,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d4",
+      "exam": "4",
+      "ball": 1,
+      "hours": 5,
+      "lessons": 5,
+      "byMode": {
+        "sim": 5,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d5",
+      "exam": "5",
+      "ball": 1,
+      "hours": 5,
+      "lessons": 4,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d6",
+      "exam": "6",
+      "ball": 1,
+      "hours": 5,
+      "lessons": 4,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d7",
+      "exam": "7",
+      "ball": 1,
+      "hours": 3,
+      "lessons": 4,
+      "byMode": {
+        "sim": 3,
+        "download": 0,
+        "real": 1,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d8",
+      "exam": "8",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 4,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d9",
+      "exam": "9",
+      "ball": 1,
+      "hours": 5,
+      "lessons": 5,
+      "byMode": {
+        "sim": 5,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d10",
+      "exam": "10",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 4,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 0,
+        "exam": 0
+      },
+      "downloads": [],
+      "realRuns": 0,
+      "realTimed": 0
+    },
+    {
+      "id": "d11",
+      "exam": "11",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 4,
+      "byMode": {
+        "sim": 3,
+        "download": 0,
+        "real": 1,
+        "exam": 0
+      },
+      "downloads": [
+        "fileTree"
+      ],
+      "realRuns": 2,
+      "realTimed": 0
+    },
+    {
+      "id": "d12",
+      "exam": "12",
+      "ball": 1,
+      "hours": 4,
+      "lessons": 5,
+      "byMode": {
+        "sim": 2,
+        "download": 0,
+        "real": 3,
+        "exam": 0
+      },
+      "downloads": [
+        "fileTree"
+      ],
+      "realRuns": 2,
+      "realTimed": 0
+    },
+    {
+      "id": "d13",
+      "exam": "13.1",
+      "ball": 2,
+      "hours": 5,
+      "lessons": 7,
+      "byMode": {
+        "sim": 5,
+        "download": 0,
+        "real": 2,
+        "exam": 0
+      },
+      "downloads": [
+        "lo",
+        "demo13"
+      ],
+      "realRuns": 3,
+      "realTimed": 1
+    },
+    {
+      "id": "d14",
+      "exam": "13.2",
+      "ball": 2,
+      "hours": 6,
+      "lessons": 7,
+      "byMode": {
+        "sim": 6,
+        "download": 0,
+        "real": 1,
+        "exam": 0
+      },
+      "downloads": [
+        "lo",
+        "demo13"
+      ],
+      "realRuns": 3,
+      "realTimed": 1
+    },
+    {
+      "id": "d15",
+      "exam": "14",
+      "ball": 3,
+      "hours": 10,
+      "lessons": 9,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 5,
+        "exam": 0
+      },
+      "downloads": [
+        "lo",
+        "task14ods",
+        "bigTable"
+      ],
+      "realRuns": 4,
+      "realTimed": 1
+    },
+    {
+      "id": "d16",
+      "exam": "15",
+      "ball": 2,
+      "hours": 8,
+      "lessons": 8,
+      "byMode": {
+        "sim": 6,
+        "download": 0,
+        "real": 2,
+        "exam": 0
+      },
+      "downloads": [
+        "kumir",
+        "kumirOnline"
+      ],
+      "realRuns": 10,
+      "realTimed": 2
+    },
+    {
+      "id": "d17",
+      "exam": "16",
+      "ball": 2,
+      "hours": 9,
+      "lessons": 8,
+      "byMode": {
+        "sim": 4,
+        "download": 0,
+        "real": 4,
+        "exam": 0
+      },
+      "downloads": [
+        "python"
+      ],
+      "realRuns": 3,
+      "realTimed": 1
+    },
+    {
+      "id": "d18",
+      "exam": "13–16",
+      "ball": 21,
+      "hours": 8,
+      "lessons": 6,
+      "byMode": {
+        "sim": 2,
+        "download": 0,
+        "real": 0,
+        "exam": 4
+      },
+      "downloads": [
+        "lo",
+        "kumir",
+        "python"
+      ],
+      "realRuns": 4,
+      "realTimed": 4
+    }
+  ]
+}

@@ -4,7 +4,11 @@
 
   App.router.register("progress", {
     view: function () {
-      var s = ST.summary();
+      var courseId = App.course.current();
+      var courseDef = App.course.currentDef();
+      var other = App.COURSES.filter(function (c) { return c.id !== courseId; })[0];
+      var s = ST.summary(courseId);
+      var otherS = other ? ST.summary(other.id) : null;
       var plan = ST.planDef();
       var info = App.usage.info();
       var act = ST.activity();
@@ -12,7 +16,8 @@
       act.forEach(function (a) { days[a.d] = (days[a.d] || 0) + 1; });
 
       var html = '<button class="back" data-go="home">← На главную</button>' +
-        '<div class="kicker">Шаг 2 из 2</div><h2>Твой прогресс</h2>';
+        App.course.tabsHtml("compact") +
+        '<div class="kicker">' + App.util.esc(courseDef.kicker) + '</div><h2>Прогресс: ' + App.util.esc(courseDef.name) + '</h2>';
 
       html += '<div class="stat-grid">' +
         '<div class="stat-box"><div class="n">' + s.percent + "%</div><div class=\"l\">курса пройдено</div></div>" +
@@ -30,6 +35,16 @@
           (ST.test ? ST.test.score + " / " + ST.test.total : "не пройден") + "</span></div>" +
       "</div>";
 
+      /* второй курс — виден рядом, чтобы прогресс не смешивался */
+      if (other && otherS) {
+        html += '<div class="card" style="margin-top:14px"><div class="kicker">Второй курс</div>' +
+          '<div class="progress-row"><span><b>' + App.util.esc(other.name) + '</b></span>' +
+            '<span class="val">' + otherS.finished + " / " + otherS.total + " · " + otherS.percent + '%</span></div>' +
+          '<div class="bar" style="margin:10px 0"><i style="width:' + otherS.percent + '%"></i></div>' +
+          '<div class="row"><button class="btn sm" data-course="' + other.id + '">Открыть курс «' +
+            App.util.esc(other.short) + '»</button></div></div>';
+      }
+
       html += '<h3>По модулям</h3>';
       Object.keys(s.byModule).forEach(function (m) {
         var b = s.byModule[m];
@@ -42,7 +57,7 @@
 
       /* ошибки: где больше всего неверных ответов */
       var wrong = [];
-      ST.allLessons().forEach(function (l) {
+      ST.allLessons(courseId).forEach(function (l) {
         (l.tasks || []).forEach(function (t) {
           var a = ST.answerOf(t.id);
           if (a && !a.ok) wrong.push({ lesson: l, task: t });

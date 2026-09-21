@@ -7,10 +7,13 @@
 
   window.App = window.App || {};
 
-  /* ---- реестр модулей уроков (data/lessons/module-*.js складывают сюда) ---- */
-  App.registerModule = function (moduleName, lessons) {
+  /* ---- реестр модулей уроков (data/lessons/module-*.js складывают сюда) ----
+     course: "base" — школьная информатика 5–9 (по умолчанию), "oge" — подготовка к ОГЭ. */
+  App.registerModule = function (moduleName, lessons, course) {
     App._modules = App._modules || [];
-    App._modules.push({ name: moduleName, lessons: lessons || [] });
+    var id = course || "base";
+    (lessons || []).forEach(function (l) { if (!l.course) l.course = id; });
+    App._modules.push({ name: moduleName, course: id, lessons: lessons || [] });
     App.LESSONS = App._modules.reduce(function (acc, m) { return acc.concat(m.lessons); }, []);
     App.LESSONS.sort(function (a, b) { return a.id - b.id; });
     // порядок следования модулей сохраняем отдельно (для страницы уроков)

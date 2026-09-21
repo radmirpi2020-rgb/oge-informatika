@@ -12,6 +12,7 @@
     { route: "lessons", label: "Уроки" },
     { route: "tutor", label: "Провожатый" },
     { route: "progress", label: "Прогресс" },
+    { route: "account", label: "Аккаунт" },
     { route: "media", label: "Медиа" },
     { route: "plans", label: "Тарифы" },
     { route: "admin", label: "Админ" }
@@ -26,8 +27,27 @@
   R.parse = function () {
     var h = location.hash.replace(/^#\/?/, "");
     if (!h) return { name: "home", param: null };
-    var parts = h.split("/");
+    /* параметры запроса отрезаем: #/account?verify=abc — это ссылка из письма */
+    var qi = h.indexOf("?");
+    var parts = (qi === -1 ? h : h.slice(0, qi)).split("/");
     return { name: parts[0] || "home", param: parts[1] != null ? decodeURIComponent(parts[1]) : null };
+  };
+
+  /** параметры после «?»: #/account?verify=abc → { verify: "abc" } */
+  R.query = function () {
+    var h = location.hash.replace(/^#\/?/, "");
+    var qi = h.indexOf("?");
+    var out = {};
+    if (qi === -1) return out;
+    h.slice(qi + 1).split("&").forEach(function (pair) {
+      if (!pair) return;
+      var eq = pair.indexOf("=");
+      var k = eq === -1 ? pair : pair.slice(0, eq);
+      var v = eq === -1 ? "" : pair.slice(eq + 1);
+      try { out[decodeURIComponent(k)] = decodeURIComponent(v.replace(/\+/g, " ")); }
+      catch (e) { out[k] = v; }
+    });
+    return out;
   };
 
   R.register = function (name, page) { App.pages[name] = page; };
@@ -35,8 +55,10 @@
   function header() {
     var plan = ST.planDef();
     var info = App.usage.info();
+    var course = App.course.currentDef();
     return '<header>' +
-      '<div class="logo" role="link" tabindex="0" data-nav="home">Информатика<span>·</span>5–9 класс</div>' +
+      '<div class="logo" role="link" tabindex="0" data-nav="home">Информатика<span>·</span>' +
+        App.util.esc(course.short) + '</div>' +
       '<div class="header-tools">' +
         '<button class="toggle" id="ringBtn" title="Лимит нейронки на сегодня">' + App.aiRing({ withText: true }) + '</button>' +
         '<button class="toggle" id="aiBtn" title="Открыть провожатого">AI</button>' +
@@ -47,13 +69,14 @@
 
   function sidebar() {
     var cur = R.current.name;
-    var html = '<aside><nav id="nav">';
+    var html = '<aside>' + App.course.tabsHtml() + '<nav id="nav">';
     R.nav.forEach(function (item) {
       html += '<button data-nav="' + item.route + '"' + (cur === item.route ? ' class="active"' : "") + '>' + item.label + '</button>';
     });
     html += '</nav><div class="aside-foot">' +
       'Тариф: <b>' + App.util.esc(ST.planDef().name) + '</b><br>' +
-      'Лимит сегодня: ' + App.util.fmt(info_left()) + ' токенов' +
+      'Лимит сегодня: ' + App.util.fmt(info_left()) + ' токенов<br>' +
+      'Контент: ' + App.util.esc(App.dataSourceNote || "из файлов") +
       '</div></aside>';
     return html;
   }
@@ -95,6 +118,16 @@
     document.addEventListener("click", function (ev) {
       var t = ev.target.closest("[data-nav]");
       if (t) { ev.preventDefault(); R.go(t.getAttribute("data-nav")); return; }
+      /* переключение курса: «Информатика 5–9 класс» ↔ «Подготовка к ОГЭ» */
+      var c = ev.target.closest("[data-course]");
+      if (c) {
+        ev.preventDefault();
+        App.course.set(c.getAttribute("data-course"));
+        if (App.pageFilter) { App.pageFilter.module = "all"; App.pageFilter.kind = "all"; App.pageFilter.q = ""; }
+        if (R.current.name === "home" || R.current.name === "notfound") R.go("lessons");
+        else R.render();
+        return;
+      }
     });
     document.addEventListener("keydown", function (ev) {
       if (ev.key === "Enter" && ev.target && ev.target.classList && ev.target.classList.contains("logo")) {

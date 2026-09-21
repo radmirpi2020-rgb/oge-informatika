@@ -31,15 +31,17 @@
       if (!l) return '<button class="back" data-go="lessons">← К урокам</button><div class="alert err">Урок не найден.</div>';
 
       App.storage.set(App.storage.KEYS.lastLesson, l.id);
-      var all = ST.allLessons();
-      var idx = ST.lessonIndex(l.id);
+      var courseId = App.course.ofLesson(l);
+      var all = ST.allLessons(courseId);
+      var idx = ST.lessonIndex(l.id, courseId);
       var prev = idx > 0 ? all[idx - 1] : null;
       var next = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
       var st = ST.lessonStats(l);
       var isPractice = l.kind === "practice";
 
       var html = '<button class="back" data-go="lessons">← К урокам</button>' +
-        '<div class="breadcrumbs"><span>' + App.util.esc(l.module || "") + "</span><span>·</span>" +
+        '<div class="breadcrumbs"><span>' + App.util.esc(App.course.label(courseId)) + "</span><span>·</span>" +
+        "<span>" + App.util.esc(l.module || "") + "</span><span>·</span>" +
         (isPractice ? "практика" : "урок") + " №" + l.id + "<span>·</span>" + (l.minutes || 7) + " мин</div>" +
         "<h1>" + App.util.esc(l.title) + "</h1>" +
         '<p class="lead">' + App.util.esc(l.sub || "") + "</p>" +

@@ -38,27 +38,30 @@
     return merged;
   };
 
-  /** видимый список уроков: базовые + добавленные вручную − удалённые */
-  ST.allLessons = function () {
+  /** видимый список уроков: базовые + добавленные вручную − удалённые.
+      course — "base", "oge" или ничего (все курсы сразу). */
+  ST.allLessons = function (course) {
     var ov = ST.overrides();
     var deleted = App.storage.get("oge_lessons_deleted", []) || [];
     var list = [];
     App.LESSONS.forEach(function (l) {
       if (deleted.indexOf(l.id) !== -1) return;
+      if (course && App.course.ofLesson(l) !== course) return;
       list.push(ST.lesson(l.id));
     });
     Object.keys(ov).forEach(function (k) {
       var id = Number(k);
       var exists = App.LESSONS.some(function (l) { return l.id === id; });
       if (exists || deleted.indexOf(id) !== -1) return;
+      if (course && App.course.ofLesson(ov[k]) !== course) return;
       list.push(ov[k]);
     });
     list.sort(function (a, b) { return a.id - b.id; });
     return list;
   };
 
-  ST.lessonIndex = function (id) {
-    var list = ST.allLessons();
+  ST.lessonIndex = function (id, course) {
+    var list = ST.allLessons(course);
     for (var i = 0; i < list.length; i++) if (list[i].id === Number(id)) return i;
     return -1;
   };
@@ -125,8 +128,9 @@
 
   /* ---------- сводка прогресса ---------- */
 
-  ST.summary = function () {
-    var list = ST.allLessons();
+  /** сводка прогресса. course — "base", "oge" или ничего (все курсы вместе) */
+  ST.summary = function (course) {
+    var list = ST.allLessons(course);
     var lessons = 0, practices = 0, tasksTotal = 0, tasksDone = 0, finished = 0, minutes = 0;
     list.forEach(function (l) {
       if (l.kind === "practice") practices++; else lessons++;
@@ -154,9 +158,9 @@
     };
   };
 
-  /** следующий незакрытый урок — «продолжить обучение» */
-  ST.nextLesson = function () {
-    var list = ST.allLessons();
+  /** следующий незакрытый урок — «продолжить обучение» (в рамках курса) */
+  ST.nextLesson = function (course) {
+    var list = ST.allLessons(course);
     for (var i = 0; i < list.length; i++) if (!ST.completed[list[i].id]) return list[i];
     return null;
   };

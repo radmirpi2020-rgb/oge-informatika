@@ -25,18 +25,33 @@
   }
 
   function lessonsTab() {
-    var all = ST.allLessons();
+    var courseId = App.course.current();
+    var courseDef = App.course.currentDef();
+    var all = ST.allLessons(courseId);
     var ov = AP.overrides();
     var del = AP.deleted();
-    var html = '<div class="row" style="margin-bottom:14px">' +
+    var html = App.course.tabsHtml("compact") +
+      '<div class="row" style="margin-bottom:14px">' +
       '<button class="btn sm" id="admAddLesson">+ Добавить урок</button>' +
       '<button class="btn sm ghost" id="admRestore">Вернуть базовые уроки (' + App.LESSONS.length + ")</button>" +
       '<button class="btn sm ghost" data-go="lessons">Посмотреть как ученик</button>' +
     "</div>";
     if (AP.msg) html += '<div class="alert ok">' + App.util.esc(AP.msg) + "</div>";
 
+    /* контент живёт в базе (Payload + PostgreSQL) — править его надо в админке Payload */
+    if (App.api && App.api.enabled) {
+      var apiBase = App.api.base || "";
+      html += '<div class="alert soft">Контент загружен из базы: <b>' +
+        App.util.esc(App.dataSourceNote || apiBase) + '</b>.<br>' +
+        'Уроки, модули и курсы редактируются в админке Payload: ' +
+        '<a href="' + App.util.esc(apiBase) + '/admin" target="_blank" rel="noopener">' + App.util.esc(apiBase) + '/admin</a>. ' +
+        'Правки здесь (в браузере) остаются локальными и базу не меняют. ' +
+        'После правок в базе: <code>node tools/export-from-payload.js</code>, чтобы обновить снимок для офлайна.</div>';
+    }
+
     html += '<div class="field"><input type="text" id="admSearch" placeholder="Поиск по названию или номеру"></div>';
-    html += '<div class="tiny muted" style="margin-bottom:10px">Всего элементов: ' + all.length +
+    html += '<div class="tiny muted" style="margin-bottom:10px">Курс «' + App.util.esc(courseDef.name) + '»: ' + all.length +
+      " элементов. Всего на сайте " + App.LESSONS.length +
       " · правок: " + Object.keys(ov).length + " · скрыто: " + del.length + "</div>";
 
     all.slice(0, 400).forEach(function (l) {

@@ -50,10 +50,25 @@ server.listen(0, "127.0.0.1", async () => {
     console.log((ok ? "  ок  " : "  404 ") + rel + " → " + status);
   }
 
-  /* главная страница и один урок должны отдаваться, а бандл содержать уроки */
+  /* главная страница и один урок должны отдаваться, а бандл содержать уроки.
+     Уроки считаем исполнением бандла, а не регуляркой: экспорт из базы (tools/export-from-payload.js)
+     пишет JSON-стиль с кавычками, и текстовый шаблон его не находит. */
   const indexStatus = await get("index.html");
   const bundle = await (await fetch(base + "data/lessons-bundle.js")).text();
-  const lessons = (bundle.match(/id:\s*(\d+)\s*,\s*module/g) || []).length;
+  let lessons = 0;
+  try {
+    const mods = [];
+    new Function("App", "window", bundle + "\n//# sourceURL=lessons-bundle.js")(
+      { registerModule: (n, l, course) => mods.push({ course: course || "base", lessons: l || [] }) },
+      { addEventListener() {} }
+    );
+    lessons = mods
+      .filter((m) => m.course === "base")
+      .reduce((n, m) => n + m.lessons.length, 0);
+  } catch (e) {
+    console.log("  ✗ бандл не исполняется: " + e.message);
+    bad++;
+  }
   console.log("\nГлавная: " + indexStatus + ", уроков в бандле: " + lessons);
   if (lessons < 300) { bad++; console.log("  ✗ в бандле меньше 300 уроков"); }
 

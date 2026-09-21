@@ -15,17 +15,21 @@
   function card(l, idx) {
     var st = statusOf(l);
     var engine = l.practice && l.practice.engine ? '<span class="kind-mark">' + App.util.esc(l.practice.engine) + "</span>" : "";
+    var mode = l.oge && l.oge.modeLabel ? '<span class="kind-mark">' + App.util.esc(l.oge.modeLabel) + "</span>" : "";
     return '<div class="lesson-card' + (l.kind === "practice" ? " practice" : "") + '" data-lesson="' + l.id + '">' +
       '<div class="num">' + App.util.pad(l.id, 3) + "</div>" +
-      '<div class="meta"><h3>' + App.util.esc(l.title) + engine + "</h3>" +
+      '<div class="meta"><h3>' + App.util.esc(l.title) + engine + mode + "</h3>" +
       '<p class="sub">' + App.util.esc(l.sub || "") + "</p></div>" +
       '<span class="status ' + st.cls + '">' + st.text + "</span></div>";
   }
 
   App.router.register("lessons", {
     view: function (param) {
-      var all = ST.allLessons();
-      var s = ST.summary();
+      var courseId = App.course.current();
+      var courseDef = App.course.currentDef();
+      var isOge = courseId === "oge";
+      var all = ST.allLessons(courseId);
+      var s = ST.summary(courseId);
       var f = App.pageFilter;
       if (param === "practice") f.kind = "practice";
 
@@ -46,10 +50,16 @@
         if (modules.indexOf(m) === -1) modules.push(m);
       });
 
-      var html = '<div class="kicker">Всего ' + all.length + " элементов</div>" +
-        "<h2>Уроки и практики</h2>" +
-        '<p class="lead">' + s.lessons + " уроков и " + s.practices + " практик. Практики идут после каждых 2–3 уроков и проверяют, что ты реально понял." +
-        " Пройдено: " + s.finished + " из " + s.total + " (" + s.percent + "%).</p>" +
+      var shortN = 0;
+      if (isOge) all.forEach(function (l) { if (l.oge && l.oge.shortTrack) shortN++; });
+
+      var html = App.course.tabsHtml("compact") +
+        '<div class="kicker">' + App.util.esc(courseDef.kicker) + ' · всего ' + all.length + " элементов</div>" +
+        "<h2>" + App.util.esc(courseDef.name) + "</h2>" +
+        '<p class="lead">' + App.util.esc(courseDef.note) +
+          " Пройдено: " + s.finished + " из " + s.total + " (" + s.percent + "%)." +
+          (isOge ? " Уроки делятся по режиму: симуляция в сайте, вживую в настоящей программе (LibreOffice, Кумир, Python) и полный вариант на 150 минут. Короткий трек — " + shortN + " уроков." : "") +
+        "</p>" +
         '<div class="bar" style="margin-bottom:16px"><i style="width:' + s.percent + '%"></i></div>';
 
       html += '<div class="card" style="padding:12px 14px">' +
@@ -79,7 +89,7 @@
           var m = l.module || "Прочее";
           if (m !== currentModule && f.module === "all") {
             currentModule = m;
-            var byMod = ST.summary().byModule[m] || { total: 0, finished: 0 };
+            var byMod = ST.summary(App.course.current()).byModule[m] || { total: 0, finished: 0 };
             html += '<div class="module-head"><h3>' + App.util.esc(m) + "</h3>" +
               '<span class="muted">' + byMod.finished + " из " + byMod.total + " пройдено</span></div>";
           }

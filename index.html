@@ -28,7 +28,7 @@
   </div>
   <footer>
     <div>Информатика · 5–9 класс · <span id="footNote">всё работает в браузере</span></div>
-    <div><a href="#/media">Медиа</a> · <a href="#/plans">Тарифы</a> · <a href="#/tutor">Провожатый</a> · <a href="#/admin">Админка</a></div>
+    <div><a href="#/account">Аккаунт</a> · <a href="#/media">Медиа</a> · <a href="#/plans">Тарифы</a> · <a href="#/tutor">Провожатый</a> · <a href="#/admin">Админка</a></div>
   </footer>
 </div>
 <div id="panels"></div>
@@ -37,17 +37,27 @@
 <!-- 1. ядро -->
 <script src="scripts/core/app.js"></script>
 <script src="scripts/core/storage.js"></script>
+<script src="scripts/core/courses.js"></script>
 <script src="scripts/core/lessons-merge.js"></script>
 <script src="scripts/core/state.js"></script>
 <script src="scripts/core/assets.js"></script>
 
 <!-- 2. данные -->
 <script src="data/plans.js"></script>
+<!-- курс 2 «Подготовка к ОГЭ»: план КИМ → политика доставки → сгенерированный курс → уроки -->
 <script src="data/oge/oge-course.js"></script>
+<script src="data/oge/oge-delivery.js"></script>
+<script src="data/oge/course-plan.js"></script>
 <!-- ключ DeepSeek: шаблон, затем локальный файл (он в .gitignore и перекрывает шаблон) -->
 <script src="config/deepseek-key.js"></script>
 <script src="config/deepseek-key.local.js" onerror="void 0"></script>
+<!-- адрес сервера с базой контента (Payload + PostgreSQL); пусто — сайт работает на файлах -->
+<script src="config/api.js"></script>
+<!-- курс 1 «Информатика 5–9 класс» -->
 <script src="data/lessons-bundle.js"></script>
+<!-- курс 2 «Подготовка к ОГЭ»: снимок из базы (если есть), иначе сборка из плана -->
+<script src="data/oge/oge-lessons-bundle.js" onerror="void 0"></script>
+<script src="data/oge/oge-lessons.js"></script>
 <script src="data/test-questions.js"></script>
 
 <!-- 3. движки практик -->
@@ -70,6 +80,7 @@
 <script src="scripts/pages/lessons.js"></script>
 <script src="scripts/pages/lesson.js"></script>
 <script src="scripts/pages/progress.js"></script>
+<script src="scripts/pages/account.js"></script>
 <script src="scripts/pages/tutor.js"></script>
 <script src="scripts/pages/plans.js"></script>
 <script src="scripts/pages/media.js"></script>
@@ -78,5 +89,8 @@
 
 <!-- 6. старт -->
 <script src="scripts/core/boot.js"></script>
+
+<!-- 7. контент из базы (Payload + PostgreSQL), если в config/api.js задан адрес -->
+<script src="scripts/core/api.js"></script>
 </body>
 </html>

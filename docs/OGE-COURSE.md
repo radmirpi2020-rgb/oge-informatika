@@ -5,9 +5,20 @@
 не хватает экзаменационного формата, критериев и тренажёров.
 
 - План подготовки для человека (что учить и в каком порядке): `docs/OGE-2026-PLAN.md`
+- **Шаблон курса: 100 уроков, режимы «симуляция / скачать / вживую»**: `docs/OGE-COURSE-TEMPLATE.md`
+- **Готовый курс (сгенерирован)**: `docs/OGE-COURSE-CONTENT.md`
+- Политика доставки (что скачать, сколько раз делать вживую): `data/oge/oge-delivery.js`
+- Генератор курса: `node tools/build-oge-course.js`
 - Каркас данных: `data/oge/oge-course.js`
 - Каркасы модулей: `data/oge/module-*.js` (генерируются)
 - Манифест с проверенными цифрами: `data/oge/MANIFEST.json`
+- Машиночитаемый план курса: `data/oge/course-plan.js`, `data/oge/delivery-manifest.json`
+
+> **Главное правило курса:** тяжёлое — скачать и работать в настоящей программе, лёгкое — симулировать
+> в сайте, но каждое практическое задание несколько раз делается на реальном инструменте.
+> Всего по курсу — **32 живых прогона**, из них 11 на время: LibreOffice, Кумир, Python, файловый менеджер.
+> Инструментов к установке ~424 МБ (LibreOffice 357,5 + Кумир 34,8 + Python 31,7 МБ); архив ФИПИ
+> на 113,7 МБ целиком **не** качаем — берём из него только файлы заданий 13 и 14.
 
 ---
 
@@ -89,17 +100,17 @@ App.OGE_PLAN.push({
 | Файл | Задание | Балл | Часы | Уроков | Доработок |
 |---|---|---|---|---|---|
 | `module-01-diagnostic.js` | весь вариант | 21 | 3 | 4 | 2 |
-| `module-02-task-01-text-volume.js` | 1 | 1 | 3 | 5 | 2 |
-| `module-03-task-02-decoding.js` | 2 | 1 | 4 | 5 | 2 |
-| `module-04-task-03-logic.js` | 3 | 1 | 4 | 5 | 2 |
+| `module-02-task-01-text-volume.js` | 1 | 1 | 3 | 4 | 2 |
+| `module-03-task-02-decoding.js` | 2 | 1 | 4 | 4 | 2 |
+| `module-04-task-03-logic.js` | 3 | 1 | 4 | 4 | 2 |
 | `module-05-task-04-graph-path.js` | 4 | 1 | 5 | 5 | 2 |
-| `module-06-task-05-executor.js` | 5 | 1 | 5 | 5 | 2 |
-| `module-07-task-06-trace-program.js` | 6 | 1 | 5 | 5 | 2 |
-| `module-08-task-07-web-address.js` | 7 | 1 | 3 | 5 | 2 |
-| `module-09-task-08-search-queries.js` | 8 | 1 | 4 | 5 | 2 |
+| `module-06-task-05-executor.js` | 5 | 1 | 5 | 4 | 2 |
+| `module-07-task-06-trace-program.js` | 6 | 1 | 5 | 4 | 2 |
+| `module-08-task-07-web-address.js` | 7 | 1 | 3 | 4 | 2 |
+| `module-09-task-08-search-queries.js` | 8 | 1 | 4 | 4 | 2 |
 | `module-10-task-09-graph-paths.js` | 9 | 1 | 5 | 5 | 2 |
-| `module-11-task-10-numeral-systems.js` | 10 | 1 | 4 | 5 | 2 |
-| `module-12-task-11-file-search.js` | 11 | 1 | 4 | 5 | 2 |
+| `module-11-task-10-numeral-systems.js` | 10 | 1 | 4 | 4 | 2 |
+| `module-12-task-11-file-search.js` | 11 | 1 | 4 | 4 | 2 |
 | `module-13-task-12-file-count.js` | 12 | 1 | 4 | 5 | 2 |
 | `module-14-task-13-presentation.js` | 13.1 | 2 | 5 | 7 | 3 |
 | `module-15-task-14-text-document.js` | 13.2 | 2 | 6 | 7 | 3 |
@@ -107,6 +118,9 @@ App.OGE_PLAN.push({
 | `module-17-task-16-robot.js` | 15 | 2 | 8 | 8 | 3 |
 | `module-18-task-17-python.js` | 16 | 2 | 9 | 8 | 3 |
 | `module-19-simulations.js` | 13–16 | 21 | 8 | 6 | 3 |
+
+Всего по реестру — **100 уроков** (см. `docs/OGE-COURSE-TEMPLATE.md`, §6). Колонка «Уроков»
+здесь справочная: истина — в `data/oge/MANIFEST.json` и `data/oge/course-plan.js`, они генерируются.
 
 *(Номера файлов и номера заданий ОГЭ не совпадают: файл `module-16` — это задание 14.
 Ориентир — колонка «Задание» и поле `exam` внутри файла.)*

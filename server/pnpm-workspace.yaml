@@ -1,0 +1,9 @@
+# Настройки pnpm 11 (часть настроек переехала из package.json сюда).
+# Разрешаем сборочные скрипты только тем пакетам, которым они нужны:
+# sharp — обработка картинок в Payload, esbuild — сборка Next,
+# @embedded-postgres/windows-x64 — распаковка бинарников локального PostgreSQL.
+allowBuilds:
+  '@embedded-postgres/windows-x64': true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true

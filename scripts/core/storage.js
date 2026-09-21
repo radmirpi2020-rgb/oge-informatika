@@ -19,7 +19,8 @@
     streak: "oge_streak",
     streakDay: "oge_streak_day",
     promo: "oge_promo",
-    practice: "oge_practice_state"   // сохранённые решения практик
+    practice: "oge_practice_state",  // сохранённые решения практик
+    course: "oge_course"             // выбранный курс: base (5–9 класс) или oge
   };
 
   S.get = function (key, def) {

@@ -1,0 +1,62 @@
+{
+  "name": "oge-site-server",
+  "version": "1.0.0",
+  "description": "Payload CMS 3 + PostgreSQL: контент и админка сайта «Информатика 5–9 класс / Подготовка к ОГЭ»",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "db:start": "node scripts/dev-db.mjs start",
+    "db:stop": "node scripts/dev-db.mjs stop",
+    "db:status": "node scripts/dev-db.mjs status",
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/seed/import-site.ts",
+    "admin:create": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/seed/create-admin.ts",
+    "publish:content": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/seed/publish.ts",
+    "verify": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/seed/verify.ts",
+    "auth:test": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/seed/auth-test.ts",
+    "db:check": "node scripts/db-check.mjs",
+    "export:static": "node ../tools/export-from-payload.js"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "3.90.1",
+    "@payloadcms/email-nodemailer": "3.90.1",
+    "@payloadcms/next": "3.90.1",
+    "@payloadcms/richtext-lexical": "3.90.1",
+    "@payloadcms/translations": "3.90.1",
+    "@payloadcms/ui": "3.90.1",
+    "cross-env": "10.1.0",
+    "dotenv": "16.5.0",
+    "graphql": "^16.8.1",
+    "next": "16.3.3",
+    "nodemailer": "^10.0.10",
+    "payload": "3.90.1",
+    "pg": "^8.16.3",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "sharp": "0.35.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "tsx": "4.22.4",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "esbuild",
+      "unrs-resolver",
+      "@embedded-postgres/windows-x64"
+    ]
+  }
+}

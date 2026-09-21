@@ -113,3 +113,20 @@
   .lesson-card .meta{padding-right:60px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+
+/* РїРµСЂРµРєР»СЋС‡Р°С‚РµР»СЊ РєСѓСЂСЃРѕРІ: В«5вЂ“9 РєР»Р°СЃСЃВ» Рё В«РћР“Р­В» */
+.course-tabs{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.course-tab{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:12px 14px;font:inherit;cursor:pointer;min-height:44px}
+.course-tab:hover{border-color:var(--accent)}
+.course-tab b{display:block;font-size:14px}
+.course-tab span{display:block;margin-top:2px}
+.course-tab.active{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}
+.course-tabs.compact{flex-direction:row;flex-wrap:wrap}
+.course-tabs.compact .course-tab{width:auto;flex:1 1 220px;min-width:0}
+.course-pair{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0 6px}
+.course-card{border:1px solid var(--line);background:var(--card);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.course-card.active{border-color:var(--accent)}
+.course-card h4{margin:0;font-size:16px}
+.course-card .num{font-family:ui-monospace,monospace;font-size:26px;font-weight:700}
+.course-card .bar{margin:2px 0 4px}
+@media (max-width:900px){.course-pair{grid-template-columns:1fr}}
