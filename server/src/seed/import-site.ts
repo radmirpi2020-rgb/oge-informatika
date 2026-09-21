@@ -267,14 +267,20 @@ if (siteApp?.PLANS) {
         planId: p.id,
         name: p.name,
         price: p.price || 0,
-        dailyTokens: p.dailyTokens,
+        /* нейронка и лимит — разные вещи: тариф может быть платным, но без провожатого */
+        ai: Boolean(p.ai),
+        dailyTokens: p.ai ? p.dailyTokens : 0,
+        badge: p.badge || '',
         desc: p.desc || '',
-        modes: (p.modes || []).map((mode: string) => ({ mode })),
+        modes: p.ai ? (p.modes || []).map((mode: string) => ({ mode })) : [],
       })),
       promoCodes: promos.map((p) => ({ code: p.code, plan: p.plan })),
     },
   })
-  console.log(`тарифы: ${plans.length}`)
+  console.log(
+    `тарифы: ${plans.length} (с нейронкой: ${plans.filter((p) => p.ai).length}, ` +
+      `без: ${plans.filter((p) => !p.ai).length})`,
+  )
 }
 
 const totals = {

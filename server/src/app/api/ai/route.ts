@@ -34,17 +34,41 @@ function reply(body: unknown, status = 200) {
 export async function POST(request: Request) {
   const payload = await getPayload({ config })
 
-  /* 1. ключ на сервере */
+  /* 1. вошедший ученик */
+  const auth = await payload.auth({ headers: request.headers })
+  const user = auth?.user as { id?: number | string; email?: string; plan?: string } | null
+  if (!user?.id) {
+    return reply({ error: 'Провожатый доступен только вошедшим. Войди в аккаунт на странице #/account.' }, 401)
+  }
+
+  /* 2. тариф ученика: провожатый входит только в «Максимум».
+        Проверяет сервер, а не браузер, — иначе тариф легко обойти.
+        Проверка идёт ДО проверки ключа, чтобы тариф работал даже без настроенного ключа.
+        Пустое значение считается «Максимумом»: ученики, созданные до появления поля,
+        доступ не теряют. */
+  const studentDoc = (await payload.findByID({
+    collection: 'students',
+    id: user.id as number,
+    depth: 0,
+    overrideAccess: true,
+  })) as { plan?: string } | null
+  const studentPlan = studentDoc?.plan || 'max'
+  if (studentPlan !== 'max') {
+    return reply(
+      {
+        error:
+          'В твоём тарифе нейронки нет. Провожатый входит в тариф «Максимум» за 990 ₽ в месяц — ' +
+          'там 100 000 токенов в день. Уроки и практики доступны без него.',
+        plan: studentPlan,
+      },
+      403,
+    )
+  }
+
+  /* 3. ключ на сервере */
   const key = process.env.DEEPSEEK_API_KEY
   if (!key) {
     return reply({ error: 'Провожатый выключен: на сервере не задан DEEPSEEK_API_KEY.' }, 503)
-  }
-
-  /* 2. вошедший ученик */
-  const auth = await payload.auth({ headers: request.headers })
-  const user = auth?.user as { id?: number | string; email?: string } | null
-  if (!user?.id) {
-    return reply({ error: 'Провожатый доступен только вошедшим. Войди в аккаунт на странице #/account.' }, 401)
   }
 
   /* 3. запрос разумного размера */

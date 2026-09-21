@@ -380,6 +380,10 @@ export interface Student {
   grade?: ('7' | '8' | '9' | 'other') | null;
   course?: ('oge' | 'base' | 'both') | null;
   /**
+   * Тариф ученика в базе — по нему сервер решает, пускать ли к провожатому (/api/ai). Клиентская проверка нужна для интерфейса, но обойти её нельзя: решает сервер. Значение по умолчанию — «Максимум»: ученики, созданные до появления поля, не теряют доступ.
+   */
+  plan?: ('free' | 'full' | 'max') | null;
+  /**
    * Регистрируясь, ученик (или родитель) соглашается на хранение прогресса
    */
   consent?: boolean | null;
@@ -772,6 +776,7 @@ export interface StudentsSelect<T extends boolean = true> {
   name?: T;
   grade?: T;
   course?: T;
+  plan?: T;
   consent?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -880,7 +885,15 @@ export interface Plan {
         planId: string;
         name: string;
         price?: number | null;
-        dailyTokens: number;
+        /**
+         * Если выключено — режимы трат закрыты, кружок лимита показывает прочерк
+         */
+        ai?: boolean | null;
+        dailyTokens?: number | null;
+        badge?: string | null;
+        /**
+         * Заполняется только у тарифов с нейронкой: eco, std, pro
+         */
         modes?:
           | {
               mode: string;
@@ -912,7 +925,9 @@ export interface PlansSelect<T extends boolean = true> {
         planId?: T;
         name?: T;
         price?: T;
+        ai?: T;
         dailyTokens?: T;
+        badge?: T;
         modes?:
           | T
           | {

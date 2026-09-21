@@ -136,23 +136,27 @@
     "</div>";
 
     html += '<div class="card"><div class="kicker">Лимиты</div>' +
-      '<div class="progress-row"><span>Тариф</span><span class="val">' + App.util.esc(plan.name) + "</span></div>" +
-      '<div class="progress-row"><span>Дневной лимит</span><span class="val">' + App.util.fmt(plan.dailyTokens) + "</span></div>" +
+      '<div class="progress-row"><span>Тариф</span><span class="val">' + App.util.esc(plan.name) +
+        (App.planAI(plan) ? "" : " (без нейронки)") + "</span></div>" +
+      '<div class="progress-row"><span>Дневной лимит</span><span class="val">' +
+        (App.planAI(plan) ? App.util.fmt(plan.dailyTokens) + " токенов" : "нейронка не входит") + "</span></div>" +
       '<div class="progress-row"><span>Бонус за прогресс</span><span class="val">+' + App.util.fmt(ST.bonusTokens()) + "</span></div>" +
       '<div class="progress-row"><span>Использовано сегодня</span><span class="val">' + App.util.fmt(info.used) + " (" + info.calls + " запросов)</span></div>" +
       '<div class="row" style="margin-top:12px">' +
         App.PLANS.map(function (p) {
-          return '<button class="btn sm' + (p.id === plan.id ? "" : " ghost") + '" data-setplan="' + p.id + '">' + App.util.esc(p.name) + "</button>";
+          return '<button class="btn sm' + (p.id === plan.id ? "" : " ghost") + '" data-setplan="' + p.id + '">' +
+            App.util.esc(p.name) + (p.price ? " · " + p.price + " ₽" : "") + "</button>";
         }).join("") +
         '<button class="btn sm ghost" id="admResetUsage">Сбросить расход дня</button>' +
       "</div>" +
-      '<div class="tiny muted" style="margin-top:10px">Расход считается по ответам модели: prompt + completion. Кружок в шапке показывает остаток.</div>' +
+      '<div class="tiny muted" style="margin-top:10px">Расход считается по ответам модели: prompt + completion. Кружок в шапке показывает остаток, ' +
+      "а в тарифах без нейронки вместо кружка стоит прочерк.</div>" +
     "</div>";
 
     html += '<div class="card"><div class="kicker">Промокоды</div>' +
-      '<div class="progress-row"><span>START30</span><span class="val">Старт на 30 дней</span></div>' +
-      '<div class="progress-row"><span>PRO30</span><span class="val">Про на 30 дней</span></div>' +
-      '<div class="progress-row"><span>SCHOOL</span><span class="val">Про на 90 дней</span></div>' +
+      '<div class="progress-row"><span>FULL30</span><span class="val">Полный курс на 30 дней</span></div>' +
+      '<div class="progress-row"><span>MAX30</span><span class="val">Максимум на 30 дней</span></div>' +
+      '<div class="progress-row"><span>SCHOOL</span><span class="val">Максимум на 90 дней</span></div>' +
       '<div class="tiny muted">Активируются учеником на странице «Тарифы». Меняются в scripts/pages/plans.js в объекте PROMOS.</div>' +
     "</div>";
 

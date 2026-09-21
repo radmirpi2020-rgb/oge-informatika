@@ -44,13 +44,15 @@
 
   AI.mode = function () {
     var m = App.storage.get(App.storage.KEYS.aiMode, null);
-    if (!m || !App.canUseMode(m).ok && !App.canUseMode(m).why) m = App.recommendMode();
-    var list = ST.planDef().modes;
-    if (list.indexOf(m) === -1) m = list[list.length - 1];
+    var list = ST.planDef().modes || [];
+    /* в тарифе без нейронки режима нет вовсе */
+    if (!list.length) return null;
+    if (!m || list.indexOf(m) === -1) m = App.recommendMode() || list[list.length - 1];
     return m;
   };
   AI.setMode = function (m) {
-    if (ST.planDef().modes.indexOf(m) === -1) return false;
+    var list = ST.planDef().modes || [];
+    if (list.indexOf(m) === -1) return false;
     App.storage.set(App.storage.KEYS.aiMode, m);
     return true;
   };
@@ -259,12 +261,21 @@
     var gate = App.canUseMode(modeId);
     if (!gate.ok) {
       var plan = ST.planDef();
+
+      /* нейронки нет в тарифе — предлагаем нужный тариф, а не «режим повыше» */
+      if (gate.why === "noai") {
+        var eNo = new Error(App.noAiHint());
+        eNo.code = "NOAI";
+        return { error: eNo };
+      }
+
       if (gate.why === "plan") {
         var better = null;
         for (var i = 0; i < App.PLANS.length; i++) {
-          if (App.PLANS[i].modes.indexOf(modeId) !== -1 && App.PLANS[i].dailyTokens > plan.dailyTokens) { better = App.PLANS[i]; break; }
+          if ((App.PLANS[i].modes || []).indexOf(modeId) !== -1 &&
+              App.PLANS[i].dailyTokens > plan.dailyTokens) { better = App.PLANS[i]; break; }
         }
-        var e = new Error("Режим «" + App.AI_MODE(modeId).name + "» входит в тариф «" + (better ? better.name : "Про") + "»" +
+        var e = new Error("Режим «" + App.AI_MODE(modeId).name + "» входит в тариф «" + (better ? better.name : "Максимум") + "»" +
           (better ? " — там " + App.util.fmt(better.dailyTokens) + " токенов в день." : "."));
         e.code = "PLAN";
         return { error: e };

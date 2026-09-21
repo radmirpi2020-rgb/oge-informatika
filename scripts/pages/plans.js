@@ -3,9 +3,9 @@
   "use strict";
 
   var PROMOS = {
-    "START30": { plan: "start", days: 30, label: "Старт на 30 дней" },
-    "PRO30": { plan: "pro", days: 30, label: "Про на 30 дней" },
-    "SCHOOL": { plan: "pro", days: 90, label: "Про на 90 дней (школьный)" }
+    "FULL30": { plan: "full", days: 30, label: "Полный курс на 30 дней" },
+    "MAX30": { plan: "max", days: 30, label: "Максимум на 30 дней" },
+    "SCHOOL": { plan: "max", days: 90, label: "Максимум на 90 дней (школьный)" }
   };
 
   App.router.register("plans", {
@@ -13,19 +13,27 @@
       var cur = ST.planDef();
       var info = App.usage.info();
       var promo = ST.promo;
+      var hasAi = App.planAI(cur);
+      var aiPlan = App.aiPlan();
 
       var html = '<button class="back" data-go="home">← На главную</button>' +
-        '<div class="kicker">Подписка и лимиты</div>' +
-        "<h2>Сколько нейронки тебе нужно</h2>" +
-        '<p class="lead">Лимит — это токены в день: примерно как «сколько вопросов можно задать». ' +
-        "Один короткий ответ — около 1 200 токенов, разбор с кодом — около 4 000, полный режим агента — до 12 000. " +
-        "Считаем честно, по факту ответа, и показываем кружком в шапке.</p>";
+        '<div class="kicker">Тарифы</div>' +
+        "<h2>Курс отдельно, нейронка отдельно</h2>" +
+        '<p class="lead">Уроки и практики — это курс. Провожатый на нейронке — отдельная часть: ' +
+        "он объясняет, разбирает ошибки и ведёт по плану. Можно взять только курс, а нейронку добавить позже.</p>";
 
+      /* кружок лимита показываем только тем, у кого нейронка в тарифе */
       html += '<div class="card"><div class="row center" style="gap:16px">' + App.aiRing({ size: 60, stroke: 6 }) +
-        "<div><b>Сегодня осталось " + App.util.fmt(info.left) + " токенов</b><br>" +
-        '<span class="tiny muted">лимит ' + App.util.fmt(info.limit) + " · использовано " + App.util.fmt(info.used) +
-        " · запросов " + info.calls + "</span></div>" +
-        '<div style="flex:1"></div><button class="btn sm ghost" id="limitBtn">Подробнее</button></div></div>';
+        (hasAi
+          ? "<div><b>Сегодня осталось " + App.util.fmt(info.left) + " токенов</b><br>" +
+            '<span class="tiny muted">лимит ' + App.util.fmt(info.limit) + " · использовано " + App.util.fmt(info.used) +
+            " · запросов " + info.calls + "</span></div>" +
+            '<div style="flex:1"></div><button class="btn sm ghost" id="limitBtn">Подробнее</button>'
+          : "<div><b>Нейронка в тариф не входит</b><br>" +
+            '<span class="tiny muted">Уроки и практики работают полностью. Провожатый — в тарифе «' +
+            App.util.esc(aiPlan ? aiPlan.name : "Максимум") + "» за " + (aiPlan ? aiPlan.price : 990) + " ₽.</span></div>" +
+            '<div style="flex:1"></div><button class="btn sm" data-plan="' + (aiPlan ? aiPlan.id : "max") + '">Взять нейронку</button>') +
+        "</div></div>";
 
       html += '<div class="plan-grid">';
       App.PLANS.forEach(function (p) {
@@ -34,7 +42,9 @@
           (p.badge ? '<span class="badge accent">' + App.util.esc(p.badge) + "</span>" : "") +
           "<h3>" + App.util.esc(p.name) + "</h3>" +
           '<div class="price">' + (p.price ? p.price + " ₽" : "0 ₽") + " <small>" + App.util.esc(p.period || "навсегда") + "</small></div>" +
-          '<div class="tiny muted">Лимит: ' + App.util.fmt(p.dailyTokens) + " токенов в день</div>" +
+          '<div class="tiny ' + (p.ai ? "muted" : "") + '">' +
+            (p.ai ? "Нейронка: " + App.util.fmt(p.dailyTokens) + " токенов в день" : "Нейронка не входит") +
+          "</div>" +
           "<ul>" + p.features.map(function (f) { return "<li>" + App.util.esc(f) + "</li>"; }).join("") + "</ul>" +
           '<div class="spacer"></div>' +
           (isCur ? '<button class="btn sm" disabled>Текущий тариф</button>'
@@ -43,11 +53,12 @@
       });
       html += "</div>";
 
-      html += "<h3>Режимы трат</h3>" +
-        '<p class="tiny muted">Режим выбирается в панели провожатого. Чем выше режим, тем больше инструментов и расход.</p>' +
+      html += "<h3>Режимы трат провожатого</h3>" +
+        '<p class="tiny muted">Режим выбирается в панели провожатого. Чем выше режим, тем больше инструментов и расход. ' +
+        "Один короткий ответ — около 1 200 токенов, разбор с кодом — около 4 000, полный агент — до 12 000.</p>" +
         '<div class="mode-grid">';
       App.AI_MODES.forEach(function (m) {
-        var allowed = cur.modes.indexOf(m.id) !== -1;
+        var allowed = (cur.modes || []).indexOf(m.id) !== -1;
         html += '<div class="mode' + (allowed ? "" : " disabled") + '">' +
           "<b>" + m.name + (allowed ? "" : " 🔒") + "</b>" +
           '<div class="cost">≈ ' + App.util.fmt(m.cost) + " токенов за ответ</div>" +
@@ -56,10 +67,14 @@
         "</div>";
       });
       html += "</div>";
+      if (!hasAi) {
+        html += '<div class="alert soft">Режимы трат относятся к провожатому. В тарифе «' + App.util.esc(cur.name) +
+          "» они закрыты — сам курс от этого не зависит.</div>";
+      }
 
       html += "<h3>Промокод</h3><div class=\"card\">" +
         '<div class="field"><label>Если дали код — введи его здесь</label>' +
-        '<input type="text" id="promoInput" placeholder="например START30"></div>' +
+        '<input type="text" id="promoInput" placeholder="например MAX30"></div>' +
         '<div class="row"><button class="btn sm" id="promoBtn">Активировать</button></div>' +
         '<div id="promoMsg" class="tiny" style="margin-top:8px">' +
           (promo ? "Активен: " + App.util.esc(promo.label) + " до " + promo.until : "Промокод не активирован.") + "</div>" +
@@ -80,8 +95,10 @@
           ST.setPlan(id);
           App.storage.del(App.storage.KEYS.aiMode);
           var p = App.plan(id);
-          alert("Тариф «" + p.name + "» включён. Дневной лимит: " + App.util.fmt(p.dailyTokens) +
-            " токенов, режимы: " + p.modes.map(function (m) { return App.AI_MODE(m).name; }).join(", ") + ".");
+          alert("Тариф «" + p.name + "» включён." +
+            (p.ai ? " Нейронка: " + App.util.fmt(p.dailyTokens) + " токенов в день, режимы: " +
+              (p.modes || []).map(function (m) { return App.AI_MODE(m).name; }).join(", ") + "."
+              : " Нейронка в этот тариф не входит."));
           App.router.render();
         });
       });

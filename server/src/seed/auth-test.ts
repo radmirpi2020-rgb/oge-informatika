@@ -134,7 +134,7 @@ async function main() {
     .catch(() => false)
   check('старый пароль больше не работает', !oldPassword)
 
-  /* 9. саморегистрация не даёт прав администратора */
+  /* 9. саморегистрация не даёт прав администратора и не выбирает тариф */
   const sneaky = await payload
     .create({
       collection: 'students',
@@ -143,6 +143,76 @@ async function main() {
     })
     .catch(() => null)
   check('роли не выдаются через регистрацию', !sneaky || !('roles' in (sneaky as object)))
+
+  /* тариф, присланный клиентом, должен быть отброшен: иначе любой выберет себе «Максимум» бесплатно.
+     Сначала проверяем поведением: пробуем записать 'free' (без нейронки) и смотрим, что осталось. */
+  const planEmail = `prover-ka-plan-${stamp}@example.ru`
+  const planAttempt = await payload
+    .create({
+      collection: 'students',
+      data: { email: planEmail, password, plan: 'free' } as never,
+      overrideAccess: false,
+    })
+    .then((doc) => ({ ok: true, id: doc.id, plan: (doc as { plan?: string }).plan }))
+    .catch(() => ({ ok: false, id: null, plan: null }))
+
+  if (!planAttempt.ok) {
+    /* вариант, когда Payload прямо отклоняет попытку записи в закрытое поле — тоже хорошо */
+    check('тариф нельзя выбрать самому при регистрации', true, 'запись отклонена')
+  } else {
+    const stored = (await payload.findByID({
+      collection: 'students',
+      id: planAttempt.id as number,
+      depth: 0,
+      overrideAccess: true,
+    })) as { plan?: string }
+    check(
+      'тариф нельзя выбрать самому при регистрации',
+      stored.plan !== 'free',
+      'в базе осталось «' + stored.plan + '», клиент присылал «free»',
+    )
+    await payload.delete({ collection: 'students', id: planAttempt.id as number, overrideAccess: true })
+  }
+
+  /* 10. тариф проверяет сервер, а не браузер: ученик с тарифом без нейронки не получит ответ.
+         Ключ DeepSeek при этом не нужен — отказ происходит раньше. */
+  const base = process.env.API_BASE || `http://127.0.0.1:${process.env.PORT || 3000}`
+  const studentToken = login.token as string
+  const askAi = (token: string) =>
+    fetch(base + '/api/ai', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'JWT ' + token,
+        Origin: process.env.SITE_ORIGIN || 'http://127.0.0.1:8080',
+      },
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'привет' }] }),
+    }).then(async (r) => ({ status: r.status, body: (await r.json().catch(() => ({}))) as Record<string, unknown> }))
+
+  /* у ученика тариф по умолчанию «Максимум» — тариф его не отклоняет.
+     Дальше может быть 503 (нет ключа) или 401/200: важно, что это НЕ отказ по тарифу. */
+  const withMax = await askAi(studentToken).catch(() => null)
+  if (!withMax) {
+    console.log('  ~  сервер не поднят — проверка тарифа на сервере пропущена (запусти pnpm dev)')
+  } else {
+    check('с тарифом «Максимум» отказа по тарифу нет', withMax.status !== 403, 'статус ' + withMax.status)
+
+    await payload.update({
+      collection: 'students',
+      id: created.id,
+      data: { plan: 'full' } as never,
+      overrideAccess: true,
+    })
+    /* повторный вход нужен, чтобы токен нёс свежие данные */
+    const relogin2 = await payload.login({ collection: 'students', data: { email, password: newPassword } })
+    const withFull = await askAi(relogin2.token as string)
+    check('с тарифом без нейронки сервер отвечает отказом', withFull.status === 403, 'статус ' + withFull.status)
+    check(
+      'в отказе сказано про тариф «Максимум»',
+      /Максимум/.test(String(withFull.body.error || '')),
+      String(withFull.body.error || '').slice(0, 60),
+    )
+  }
 
   /* чистим за собой */
   await payload.delete({ collection: 'progress', where: { student: { in: [created.id, other.id] } } })

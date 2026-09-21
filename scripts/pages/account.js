@@ -49,8 +49,20 @@
   function saveSession(token, user) {
     App.storage.set(AUTH.TOKEN_KEY, token);
     App.storage.set(AUTH.USER_KEY, user || null);
+    /* тариф ученика хранится в аккаунте: сервер по нему решает, пускать ли к провожатому.
+       Подтягиваем его сюда, чтобы интерфейс показывал то же самое, что разрешает сервер. */
+    AUTH.applyPlan(user);
     emit();
   }
+
+  /** привести тариф на сайте к тарифу из аккаунта (между free / full / max) */
+  AUTH.applyPlan = function (user) {
+    var p = user && user.plan;
+    if (!p) return false;
+    if (!App.plan(p) || App.plan(p).id !== p) return false;
+    ST.setPlan(p);
+    return true;
+  };
 
   function clearSession() {
     App.storage.del(AUTH.TOKEN_KEY);
@@ -144,7 +156,10 @@
     if (!AUTH.logged()) return Promise.resolve(null);
     return apiCall("GET", "/api/students/me?depth=0").then(function (res) {
       var user = res.user || null;
-      if (user) App.storage.set(AUTH.USER_KEY, user);
+      if (user) {
+        App.storage.set(AUTH.USER_KEY, user);
+        AUTH.applyPlan(user);
+      }
       return user;
     }).catch(function (e) {
       if (e.status === 401) clearSession();

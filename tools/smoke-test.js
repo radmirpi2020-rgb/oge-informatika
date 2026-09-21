@@ -289,21 +289,70 @@ guard("разметка теории", () => {
   });
 });
 
-guard("лимиты и тарифы", () => {
-  App.PLANS.forEach((p) => { if (!p.dailyTokens || !p.modes.length) errors.push("тариф " + p.id + " пустой"); });
+guard("тарифы: курс отдельно, нейронка отдельно", () => {
+  /* Три тарифа: бесплатный, «Полный курс» без нейронки, «Максимум» с нейронкой.
+     Проверяем и состав, и то, что гейты доступа считают это правильно. */
+  const byId = {};
+  App.PLANS.forEach((p) => { byId[p.id] = p; });
+
+  ["free", "full", "max"].forEach((id) => {
+    if (!byId[id]) errors.push("нет тарифа " + id);
+  });
+
+  App.PLANS.forEach((p) => {
+    if (typeof p.ai !== "boolean") errors.push("у тарифа " + p.id + " не указано, входит ли нейронка");
+    if (p.ai && (!p.dailyTokens || !(p.modes || []).length)) {
+      errors.push("тариф " + p.id + " с нейронкой, но без лимита или режимов");
+    }
+    if (!p.ai && ((p.modes || []).length || p.dailyTokens)) {
+      errors.push("тариф " + p.id + " без нейронки, но с режимами или лимитом");
+    }
+  });
+
+  const price = (id) => byId[id] && byId[id].price;
+  if (price("free") !== 0) errors.push("бесплатный тариф стоит " + price("free"));
+  if (price("full") !== 490) errors.push("тариф без нейронки стоит " + price("full") + ", ожидали 490");
+  if (!byId.max || byId.max.price !== 990) errors.push("тариф с нейронкой стоит " + (byId.max && byId.max.price) + ", ожидали 990");
+  if (!byId.max || byId.max.dailyTokens !== 100000) {
+    errors.push("лимит тарифа с нейронкой " + (byId.max && byId.max.dailyTokens) + ", ожидали 100 000");
+  }
+
+  /* на бесплатном нейронки нет: режим не даётся, а подсказка ведёт на тариф с ИИ */
+  ST.setPlan("free");
+  if (App.planAI()) errors.push("на бесплатном тарифе нейронка считается доступной");
+  if (App.canUseMode("eco").why !== "noai") errors.push("на бесплатном тарифе режим не заблокирован как «нет ИИ»");
+  if (App.recommendMode() !== null) errors.push("на бесплатном тарифе рекомендуется режим трат");
+  if (App.ai.mode() !== null) errors.push("на бесплатном тарифе выбран режим трат");
+  if (ST.bonusTokens() !== 0) errors.push("бонус токенов начисляется даже без нейронки");
+  if (!/990/.test(App.noAiHint())) errors.push("подсказка про тариф без нейронки не называет цену: " + App.noAiHint());
+
+  const noAi = App.ai.ask("объясни тему", { mode: "eco" });
+  if (!noAi.error || noAi.error.code !== "NOAI") errors.push("без нейронки запрос не отклонён понятной ошибкой");
+
+  /* на тарифе с нейронкой всё работает */
+  ST.setPlan("max");
+  ST.reset("ai");
+  if (!App.planAI()) errors.push("на тарифе «Максимум» нейронка не считается доступной");
   const info = App.usage.info();
   if (info.limit <= 0) errors.push("дневной лимит не считается");
   const before = App.usage.info().used;
   App.usage.add(1000, "eco");
   if (App.usage.info().used !== before + 1000) errors.push("расход токенов не считается");
-  App.ai.setMode("eco");
-  if (App.ai.mode() !== "eco") errors.push("режим трат не переключается");
+  if (!App.ai.setMode("eco")) errors.push("режим трат не переключается");
+  if (App.ai.mode() !== "eco") errors.push("режим трат не сохраняется");
   if (!App.aiRing({}).indexOf("limit-ring")) errors.push("кружок лимита не рисуется");
+
+  /* возвращаем состояние по умолчанию, как у нового ученика */
+  ST.setPlan("free");
+  ST.reset("ai");
 });
 
 guard("локальный ответ без ключа", () => {
   /* В config/deepseek-key.js может лежать рабочий ключ: тогда ветка «без ключа» не выполняется,
-     и тест падал бы из-за настроек, а не из-за кода. Поэтому состояние ключа убираем явно. */
+     и тест падал бы из-за настроек, а не из-за кода. Поэтому состояние ключа убираем явно.
+     Нейронка должна входить в тариф, иначе запрос отклонится раньше — берём «Максимум». */
+  const savedPlan = ST.plan;
+  ST.setPlan("max");
   const savedKey = App.storage.get("oge_ai_key", null);
   const savedWin = global.DEEPSEEK_API_KEY;
   App.storage.del("oge_ai_key");
@@ -317,6 +366,7 @@ guard("локальный ответ без ключа", () => {
   /* возвращаем всё как было */
   if (savedWin !== undefined) { try { global.DEEPSEEK_API_KEY = savedWin; } catch (e) {} }
   if (savedKey !== null && savedKey !== undefined) App.storage.set("oge_ai_key", savedKey);
+  ST.setPlan(savedPlan || "free");
 });
 
 /* ---------- итог ---------- */

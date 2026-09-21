@@ -75,7 +75,9 @@
     });
     html += '</nav><div class="aside-foot">' +
       'Тариф: <b>' + App.util.esc(ST.planDef().name) + '</b><br>' +
-      'Лимит сегодня: ' + App.util.fmt(info_left()) + ' токенов<br>' +
+      (App.planAI()
+        ? 'Лимит сегодня: ' + App.util.fmt(info_left()) + ' токенов<br>'
+        : 'Нейронка: <b>не входит</b><br>') +
       'Контент: ' + App.util.esc(App.dataSourceNote || "из файлов") +
       '</div></aside>';
     return html;

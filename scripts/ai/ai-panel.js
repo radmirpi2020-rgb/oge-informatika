@@ -9,6 +9,17 @@
     opts = opts || {};
     var size = opts.size || 22;
     var stroke = opts.stroke || 3;
+
+    /* в тарифе без нейронки кружок нечего заполнять — показываем знак «—» */
+    if (!App.planAI()) {
+      var noAi = '<span class="ring-wrap" style="--ring:' + size + 'px">' +
+        '<span class="ring-off" style="width:' + size + 'px;height:' + size + 'px;display:inline-flex;' +
+        'align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:50%;' +
+        'font-size:' + Math.round(size * 0.5) + 'px;color:var(--muted)">—</span></span>';
+      if (opts.withText) noAi += '<span class="mono tiny" style="margin-left:6px">без ИИ</span>';
+      return noAi;
+    }
+
     var info = App.usage.info();
     var left = info.percent;                 // сколько осталось, %
     var r = (size - stroke) / 2;
@@ -31,6 +42,36 @@
   App.showLimitModal = function () {
     var info = App.usage.info();
     var plan = ST.planDef();
+    var hasAi = App.planAI(plan);
+
+    /* тариф без нейронки: вместо лимитов показываем, что именно входит и сколько стоит добавить */
+    if (!hasAi) {
+      var ai2 = App.aiPlan();
+      var old0 = document.getElementById("limitModal");
+      if (old0) old0.remove();
+      var div0 = document.createElement("div");
+      div0.className = "modal show";
+      div0.id = "limitModal";
+      div0.innerHTML = '<div class="inner">' +
+        '<div class="row center" style="justify-content:space-between;margin-bottom:10px">' +
+          "<b>Нейронка не входит в тариф</b><button class=\"toggle\" id=\"limClose\">Закрыть</button>" +
+        "</div>" +
+        '<p class="tiny muted">Тариф «' + App.util.esc(plan.name) + '» — это курс: уроки, практики, прогресс. ' +
+        "Провожатый на нейронке подключается отдельно.</p>" +
+        '<div class="progress-row"><span>Тариф с нейронкой</span><span class="val">' +
+          App.util.esc(ai2 ? ai2.name : "Максимум") + "</span></div>" +
+        '<div class="progress-row"><span>Цена</span><span class="val">' + (ai2 ? ai2.price : 990) + " ₽ в месяц</span></div>" +
+        '<div class="progress-row"><span>Лимит</span><span class="val">' +
+          App.util.fmt(ai2 ? ai2.dailyTokens : 100000) + " токенов в день</span></div>" +
+        '<div class="row" style="margin-top:16px"><button class="btn sm" data-go="plans">Открыть тарифы</button></div>' +
+      "</div>";
+      document.body.appendChild(div0);
+      div0.addEventListener("click", function (e) {
+        if (e.target === div0 || e.target.id === "limClose") div0.remove();
+      });
+      return;
+    }
+
     var byMode = App.usage.today().byMode || {};
     var hist = App.usage.history(7);
     var max = Math.max.apply(null, hist.map(function (h) { return h.tokens; }).concat([1]));
@@ -118,9 +159,22 @@
     var modesBox = panel.querySelector("#aiModes");
     var plan = ST.planDef();
     var cur = AI.mode();
+
+    /* тариф без нейронки: вместо режимов — объяснение и кнопка на тарифы */
+    if (!App.planAI(plan)) {
+      var ai = App.aiPlan();
+      modesBox.innerHTML = '<div class="ai-locked">' +
+        "<b>Нейронка не входит в тариф «" + App.util.esc(plan.name) + "»</b>" +
+        '<div class="tiny muted" style="margin:6px 0 10px">Курс, уроки и практики работают полностью. ' +
+        "Провожатый — в тарифе «" + App.util.esc(ai ? ai.name : "Максимум") + "» за " +
+        (ai ? ai.price : 990) + " ₽: " + App.util.fmt(ai ? ai.dailyTokens : 100000) + " токенов в день.</div>" +
+        '<button class="btn sm" data-go="plans">Посмотреть тарифы</button>' +
+      "</div>";
+      return;
+    }
+
     modesBox.innerHTML = App.AI_MODES.map(function (m) {
-      var allowed = plan.modes.indexOf(m.id) !== -1;
-      var gate = App.canUseMode(m.id);
+      var allowed = (plan.modes || []).indexOf(m.id) !== -1;
       var title = allowed ? m.desc : "Доступно на тарифе выше: " + m.name;
       return '<button class="ai-mode' + (m.id === cur ? " sel" : "") + '" data-mode="' + m.id + '"' +
         (allowed ? "" : " disabled") + ' title="' + App.util.esc(title) + '">' +
@@ -140,13 +194,23 @@
   function infoLine() {
     if (!panel) return;
     var info = App.usage.info();
+    var plan = ST.planDef();
     var mode = App.AI_MODE(AI.mode());
-    panel.querySelector("#aiStatus").textContent = AI.configured()
-      ? "DeepSeek · " + mode.name
-      : "локальный разбор · ключа нет";
-    panel.querySelector("#aiInfo").innerHTML =
-      "Осталось " + App.util.fmt(info.left) + " токенов из " + App.util.fmt(info.limit) +
-      " · запросов: " + info.calls + " · режим: " + mode.name;
+
+    if (!App.planAI(plan)) {
+      panel.querySelector("#aiStatus").textContent = "тариф без нейронки";
+      panel.querySelector("#aiInfo").innerHTML =
+        "Провожатый входит в тариф «" + App.util.esc((App.aiPlan() || {}).name || "Максимум") + "». " +
+        "Уроки и практики доступны без него.";
+    } else {
+      panel.querySelector("#aiStatus").textContent = AI.configured()
+        ? "DeepSeek · " + mode.name
+        : (AI.viaProxy() ? "через сервер · " + mode.name : "локальный разбор · ключа нет");
+      panel.querySelector("#aiInfo").innerHTML =
+        "Осталось " + App.util.fmt(info.left) + " токенов из " + App.util.fmt(info.limit) +
+        " · запросов: " + info.calls + " · режим: " + mode.name;
+    }
+
     var ring = panel.querySelector(".ring-wrap");
     if (ring) ring.outerHTML = App.aiRing({ size: 24, stroke: 3 });
     var headBtn = document.getElementById("ringBtn");
