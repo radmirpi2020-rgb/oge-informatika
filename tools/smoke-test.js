@@ -116,10 +116,11 @@ scripts.forEach((rel) => {
   const p = path.join(root, rel);
   if (!fs.existsSync(p)) { errors.push("нет файла " + rel); return; }
   const code = fs.readFileSync(p, "utf8");
-  if (rel === "scripts/core/boot.js") return;   // старт не нужен: render вызываем сами
+  if (rel === "scripts/core/boot.js") return;   // старт вызовем отдельно, как в браузере
   try {
-    new Function("window", "document", "localStorage", "sessionStorage", "location", "navigator", "fetch", "alert", "confirm", "matchMedia", "AbortController", "Blob", "FileReader", "URL", "ST", code)
-      (global, document, global.localStorage, global.sessionStorage, global.location, global.navigator, global.fetch, global.alert, global.confirm, global.matchMedia, global.AbortController, global.Blob, global.FileReader, global.URL, APP.state);
+    /* (0, eval) — непрямой вызов: код исполняется в глобальной области, точно как <script>.
+       Никаких подсунутых аргументов, поэтому забытый window.X сразу даёт ReferenceError. */
+    (0, eval)(code + "\n//# sourceURL=" + rel);
   } catch (e) {
     errors.push("загрузка " + rel + ": " + e.message);
   }
@@ -145,6 +146,17 @@ console.log("App.util: " + (App && typeof App.util));
 console.log("App.pages: " + (App && typeof App.pages));
 console.log("Уроков в бандле: " + (App.LESSONS ? App.LESSONS.length : 0));
 console.log("Вопросов входного теста: " + (App.TEST_QUESTIONS ? App.TEST_QUESTIONS.length : 0));
+
+/* ---------- проверка «как в браузере»: без подсунутых глобалов ---------- */
+const globalChecks = [
+  ["App", "object"], ["ST", "object"], ["App.router", "object"], ["App.pages", "object"],
+  ["App.ai", "object"], ["App.media", "object"], ["App.PRACTICE", "object"], ["App.python", "object"]
+];
+globalChecks.forEach(([name, kind]) => {
+  let value;
+  try { value = (0, eval)(name); } catch (e) { value = undefined; }
+  if (typeof value !== kind) errors.push("в window нет " + name + " (нужен " + kind + ", а " + typeof value + ")");
+});
 
 /* ---------- страницы ---------- */
 const routes = [

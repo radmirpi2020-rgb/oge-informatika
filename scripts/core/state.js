@@ -3,6 +3,8 @@
   "use strict";
 
   var ST = App.state = {};
+  /* страницы и нейронка обращаются к состоянию как к ST, поэтому выкладываем его в window */
+  window.ST = ST;
 
   ST.answers = App.storage.get(App.storage.KEYS.answers, {}) || {};
   ST.completed = App.storage.get(App.storage.KEYS.completed, {}) || {};
